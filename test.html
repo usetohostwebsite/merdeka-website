@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merdeka Day</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            height: 100%;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden;
+        }
+        .section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .section img {
+            width: 100%;
+            height: auto;
+        }
+        .section p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            z-index: 1;
+        }
+        .section.active {
+            opacity: 1;
+        }
+        .section.active p {
+            display: block;
+            animation: slideIn 1s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section" id="section1">
+            <img src="image/0001.jpg" alt="Merdeka Day Image 1">
+            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+        </div>
+        <div class="section" id="section2">
+            <img src="image/0002.jpg" alt="Merdeka Day Image 2">
+            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+        </div>
+        <div class="section" id="section3">
+            <img src="image/0003.jpeg" alt="Merdeka Day Image 3">
+            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 0;
+        const sections = document.querySelectorAll('.section');
+        let isThrottled = false;
+
+        function showSection(index) {
+            sections.forEach((section, i) => {
+                section.classList.remove('active');
+                if (i === index) {
+                    section.classList.add('active');
+                }
+            });
+        }
+
+        function handleScroll(event) {
+            if (isThrottled) return;
+            isThrottled = true;
+            setTimeout(() => {
+                isThrottled = false;
+            }, 1000); // Throttle the scroll event
+
+            if (event.deltaY > 0) {
+                currentSection = (currentSection + 1) % sections.length;
+            } else {
+                currentSection = (currentSection - 1 + sections.length) % sections.length;
+            }
+            showSection(currentSection);
+        }
+
+        window.addEventListener('wheel', handleScroll);
+
+        // Initial display
+        showSection(currentSection);
+    </script>
+</body>
+</html>
