@@ -8,22 +8,62 @@
         body, html {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevent scrolling */
-            font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
+            width: 100%;
             height: 100%;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+        }
+        .banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh; /* Full height of the viewport */
+            background: url('image/banner.jpg') no-repeat center center/cover;
+            z-index: 10;
+            transition: transform 1s ease-out;
         }
         .container {
-            position: relative;
+            display: flex;
+            height: 100vh;
             width: 100%;
-            height: 100vh; /* Full viewport height */
             overflow: hidden;
+            background-color: #000;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+            transition: margin-top 1s ease-out;
+            margin-top: 100vh; /* Start the container out of view */
+        }
+        .timeline {
+            width: 25%;
+            background-color: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: hidden;
+        }
+        .timeline-date {
+            font-size: 1.5em;
+            margin: 20px 0;
+            opacity: 0.5;
+            transition: opacity 0.5s, font-size 0.5s;
+        }
+        .timeline-date.active {
+            opacity: 1;
+            font-size: 2em;
+        }
+        .content {
+            width: 75%;
+            height: 100%;
+            position: relative;
+            background-color: #fff;
+            color: #000;
         }
         .section {
             position: absolute;
             top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             display: flex;
@@ -31,69 +71,216 @@
             justify-content: center;
             flex-direction: column;
             opacity: 0;
-            transition: opacity 1s;
+            transition: opacity 1s, transform 1s;
         }
         .section img {
-            width: 100%;
+            width: 80%;
             height: auto;
+            max-height: 60%;
         }
         .section p {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background-color: rgba(255, 255, 255, 0.8);
             color: #000;
             padding: 20px;
             text-align: center;
-            display: none;
-            z-index: 1;
+            width: 70%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .section.active {
             opacity: 1;
+            transform: translateX(0);
         }
-        .section.active p {
-            display: block;
-            animation: slideIn 1s forwards;
+        .section.slide-out {
+            transform: translateX(-100%);
+            opacity: 0;
         }
-        @keyframes slideIn {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(-50%);
-            }
+        .section.slide-in {
+            transform: translateX(100%);
+            opacity: 1;
+        }
+        .page-turn {
+            transform: perspective(1000px) rotateY(-180deg);
+            transition: transform 1s;
+        }
+        .page-reset {
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 1s;
+        }
+        .independence-heritage {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            box-sizing: border-box;
+            transform: perspective(1000px) rotateY(180deg);
+            transition: transform 1s, opacity 1s;
+            opacity: 0;
+        }
+        .independence-heritage.active {
+            display: flex;
+            opacity: 1;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        .heritage-header {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .heritage-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .heritage-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-width: 700px;
+            text-align: left;
+        }
+        .heritage-list li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="section" id="section1">
-            <img src="image/0001.jpg" alt="Merdeka Day Image 1">
-            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+    <div class="banner" id="banner"></div>
+    <div class="container" id="container">
+        <div class="timeline" id="timeline">
+            <div class="timeline-date" id="date1">1920s</div>
+            <div class="timeline-date" id="date2">1941-1945</div>
+            <div class="timeline-date" id="date3">1946</div>
+            <div class="timeline-date" id="date4">1951</div>
+            <div class="timeline-date" id="date5">1952</div>
+            <div class="timeline-date" id="date6">1955</div>
+            <div class="timeline-date" id="date7">1956</div>
+            <div class="timeline-date" id="date8">1957</div>
+            <div class="timeline-date" id="date9">1969</div>
         </div>
-        <div class="section" id="section2">
-            <img src="image/0002.jpg" alt="Merdeka Day Image 2">
-            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+        <div class="content">
+            <div class="section active" id="section1">
+                <img src="image/0001.jpg" alt="Merdeka Day Image 1">
+                <p>Tunku's Early Life: Background on Tunku Abdul Rahman's early life, education, and influences.</p>
+            </div>
+            <div class="section" id="section2">
+                <img src="image/0002.jpg" alt="Merdeka Day Image 2">
+                <p>Japanese Occupation: Overview of the Japanese occupation and its impact on Malaya, including the rise of anti-colonial sentiment.</p>
+            </div>
+            <div class="section" id="section3">
+                <img src="image/0003.jpeg" alt="Merdeka Day Image 3">
+                <p>Formation of UMNO: Establishment of UMNO, Tunku's involvement, and its objectives.</p>
+            </div>
+            <div class="section" id="section4">
+                <img src="image/0004.jpg" alt="Merdeka Day Image 4">
+                <p>Tunku Becomes UMNO President: Instead of becoming a king, TAR chose to lead UMNO to achieve independence for Malaya.</p>
+            </div>
+            <div class="section" id="section5">
+                <img src="image/0005.jpg" alt="Merdeka Day Image 5">
+                <p>Formation of the Alliance Party: TAR proved to the British that the people of Malaya were united when the Alliance Party (collaboration of UMNO, MCA, and MIC) won big in Malaya's first election.</p>
+            </div>
+            <div class="section" id="section6">
+                <img src="image/0006.jpg" alt="Merdeka Day Image 6">
+                <p>First Federal Election: Details about the first federal election, Tunku's campaign strategies, and the outcome.</p>
+            </div>
+            <div class="section" id="section7">
+                <img src="image/0007.jpg" alt="Merdeka Day Image 7">
+                <p>Merdeka Mission to London: The process of gaining independence for Malaya did not involve bloodshed, but detailed negotiations.</p>
+            </div>
+            <div class="section" id="section8">
+                <img src="image/0008.jpg" alt="Merdeka Day Image 8">
+                <p>Proclamation of Independence: The lyrics of our national anthem, Negaraku, were written by TAR, inspired by the state anthem of Perak. TAR was also known as the Father of Peace due to his success in uniting various races.</p>
+            </div>
+            <div class="section" id="section9">
+                <img src="image/0009.jpg" alt="Future of Malaysia Image">
+                <p>His caliber, closely associated with the values of unity and equality, was the main driving force behind Tunku Abdul Rahman College (now known as Tunku Abdul Rahman University of Management and Technology, TAR UMT) being named after him.</p>
+            </div>
         </div>
-        <div class="section" id="section3">
-            <img src="image/0003.jpeg" alt="Merdeka Day Image 3">
-            <p>Merdeka Day, celebrated on August 31st, marks the historic moment when Malaysia achieved independence from British rule in 1957. This day is a celebration of our nation's unity, diversity, and progress.</p>
+    </div>
+
+    <div class="independence-heritage" id="independence-heritage">
+        <div class="heritage-content">
+            <h2 class="heritage-header">Independence Heritage: Appreciating the Independence of Our Beloved Nation</h2>
+            <p>Why was Malaya's independence important?</p>
+            <ul class="heritage-list">
+                <li>Freedom from the grip of colonizers over:</li>
+                <li>Economy for the development of our beloved country</li>
+                <li>Our country's natural resources</li>
+                <li>Education and development of citizens</li>
+                <li>Local culture and beliefs of all races</li>
+            </ul>
         </div>
     </div>
 
     <script>
         let currentSection = 0;
         const sections = document.querySelectorAll('.section');
+        const dates = document.querySelectorAll('.timeline-date');
+        const timeline = document.getElementById('timeline');
+        const banner = document.getElementById('banner');
+        const container = document.getElementById('container');
+        const heritageSection = document.getElementById('independence-heritage');
         let isThrottled = false;
+        let bannerScrolledOut = false;
 
-        function showSection(index) {
-            sections.forEach((section, i) => {
-                section.classList.remove('active');
-                if (i === index) {
-                    section.classList.add('active');
+        function showSection(index, direction = 'forward') {
+            if (index < sections.length) {
+                sections.forEach((section, i) => {
+                    section.classList.remove('active', 'slide-out', 'slide-in');
+                    if (i === index) {
+                        section.classList.add('active');
+                    } else if (i < index) {
+                        section.classList.add('slide-out');
+                    } else {
+                        section.classList.add('slide-in');
+                    }
+                });
+
+                if (direction === 'forward') {
+                    sections[currentSection].classList.add('page-turn');
+                    setTimeout(() => {
+                        sections[currentSection].classList.remove('page-turn');
+                    }, 1000);
+                } else {
+                    sections[currentSection].classList.add('page-reset');
+                    setTimeout(() => {
+                        sections[currentSection].classList.remove('page-reset');
+                    }, 1000);
                 }
-            });
+
+                dates.forEach((date, i) => {
+                    date.classList.remove('active');
+                    if (i === index) {
+                        date.classList.add('active');
+                    }
+                });
+
+                const timelineHeight = timeline.scrollHeight;
+                const timelineVisibleHeight = timeline.clientHeight;
+                const scrollPosition = (timelineHeight - timelineVisibleHeight) * (index / (sections.length - 1));
+
+                timeline.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                container.classList.add('page-turn');
+                setTimeout(() => {
+                    container.style.display = 'none';
+                    heritageSection.classList.add('active');
+                }, 1000);
+            }
         }
 
         function handleScroll(event) {
@@ -103,12 +290,34 @@
                 isThrottled = false;
             }, 1000); // Throttle the scroll event
 
-            if (event.deltaY > 0) {
-                currentSection = (currentSection + 1) % sections.length;
-            } else {
-                currentSection = (currentSection - 1 + sections.length) % sections.length;
+            if (!bannerScrolledOut && event.deltaY > 0) {
+                bannerScrolledOut = true;
+                banner.style.transform = 'translateY(-100%)';
+                container.style.marginTop = '0';
+            } else if (bannerScrolledOut && event.deltaY < 0 && window.scrollY === 0) {
+                if (currentSection === 0) {
+                    bannerScrolledOut = false;
+                    banner.style.transform = 'translateY(0)';
+                    container.style.marginTop = '100vh';
+                } else {
+                    currentSection = currentSection > 0 ? currentSection - 1 : 0;
+                    showSection(currentSection, 'backward');
+                }
+            } else if (bannerScrolledOut) {
+                if (event.deltaY > 0) {
+                    if (currentSection < sections.length) {
+                        currentSection += 1;
+                        showSection(currentSection, 'forward');
+                    } else {
+                        showSection(currentSection, 'forward');
+                    }
+                } else {
+                    if (currentSection > 0) {
+                        currentSection -= 1;
+                        showSection(currentSection, 'backward');
+                    }
+                }
             }
-            showSection(currentSection);
         }
 
         window.addEventListener('wheel', handleScroll);
