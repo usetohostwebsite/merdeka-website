@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merdeka Day</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: Hepta Slab, sans-serif;
+            font-weight: 500;
+            background: #efecdb;
+            color: #5D4037;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            transition: margin-top 1s ease-out;
+        }
+        .content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .section {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out; /* Smoother transition */
+            will-change: transform, opacity;
+        }
+        .section img {
+            width: 60%;
+            height: auto;
+            max-height: 60%;
+            display: block;
+            margin: 0 auto;
+        }
+        .photo-source {
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .section p {
+            width: 60%;
+            color: #000;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: none;
+            background-color: transparent;
+            word-wrap: break-word;
+            margin-bottom: 20px;
+            white-space: normal;
+            line-height: 1.5;
+        }
+
+
+        /* Animation Styles */
+        .section p span {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(4px);
+            transition: all 1.5s ease-in-out; /* Smoother animation */
+        }
+
+
+        @keyframes fade-in {
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+
+        /* Active Section Style */
+        .section.active {
+            opacity: 1;
+            transform: translateX(0); /* Center the section */
+        }
+        /* Slide-in from the left */
+        .section.slide-in-left {
+            transform: translateX(-100%);
+        }
+        /* Slide-in from the right */
+        .section.slide-in-right {
+            transform: translateX(100%);
+        }
+        /* Slide-out to the left */
+        .section.slide-out-left {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        /* Slide-out to the right */
+        .section.slide-out-right {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="content">
+            <div class="section active" id="section1">
+                <h2>1511</h2>
+                <img src="image/merdeka1.png" alt="Merdeka Day Image 1">
+                <div class="photo-source">
+                    Photo source: about-history.com/portuguese-and-dutch-colonization-of-malacca/
+                </div>
+                <p>
+                    <span>Pada</span> <span>tahun</span> <span>1511,</span> <span>Melaka</span> <span>jatuh</span> <span>ke</span> <span>tangan</span> <span>Portugis</span> <span>dan</span> <span>bermula</span> <span>dari</span> <span>tahun</span> <span>inilah</span> <span>Tanah</span> <span>Melayu</span> <span>berada</span> <span>dalam</span> <span>era</span> <span>penjajahan</span> <span>di</span> <span>mana</span> <span>Belanda</span> <span>menakluki</span> <span>Tanah</span> <span>Melayu</span> <span>pada</span> <span>tahun</span> <span>1641</span> <span>sebelum</span> <span>British</span> <span>mengambil</span> <span>alih</span> <span>pada</span> <span>tahun</span> <span>1824.</span>
+                </p>
+            </div>
+            <div class="section" id="section2">
+                <h2>1941-1945</h2>
+                <img src="image/merdeka2.png" alt="Merdeka Day Image 2">
+                <div class="photo-source">
+                    Photo source: The National Archives of Malaysia 1999/0000423g1
+                </div>
+                <p>
+                    <span>Kemudian,</span> <span>Jepun</span> <span>menakluk</span> <span>Tanah</span> <span>Melayu</span> <span>pada</span> <span>tahun</span> <span>1941</span> <span>dan</span> <span>menduduki</span> <span>Tanah</span> <span>Melayu</span> <span>sehingga</span> <span>tahun</span> <span>1945,</span> <span>setelah</span> <span>menyerah</span> <span>kalah</span> <span>ekoran</span> <span>pengeboman</span> <span>bom</span> <span>atom</span> <span>ke</span> <span>atas</span> <span>Hiroshima</span> <span>dan</span> <span>Nagasaki.</span>
+                </p>
+            </div>
+            <div class="section" id="section3">
+                <h2>1946</h2>
+                <img src="image/merdeka3.png" alt="Merdeka Day Image 3">
+                <div class="photo-source">
+                    Photo source: British Government, Public domain, via Wikimedia Commons
+                </div>
+                <p>
+                    <span>British</span> <span>kembali</span> <span>ke</span> <span>Tanah</span> <span>Melayu</span> <span>pada</span> <span>tahun</span> <span>1946.</span> <span>Pada</span> <span>1</span> <span>April</span> <span>1946,</span> <span>British</span> <span>menubuhkan</span> <span>Malayan</span> <span>Union</span> <span>tetapi</span> <span>gagasan</span> <span>ini</span> <span>mendapat</span> <span>tentangan</span> <span>hebat</span> <span>daripada</span> <span>orang</span> <span>Melayu</span> <span>kerana</span> <span>ia</span> <span>menghapuskan</span> <span>institusi</span> <span>diraja</span> <span>dan</span> <span>hak</span> <span>keistimewaan</span> <span>orang-orang</span> <span>Melayu.</span>
+                </p>
+            </div>
+            <div class="section" id="section4">
+                <h2>1952</h2>
+                <img src="image/merdeka4.png" alt="Merdeka Day Image 4">
+                <div class="photo-source">
+                    Photo source: Screenshot from Road to Nationhood Documentary produced by Rack Focus Films in association with the <br>New Straits Times Press.
+                </div>
+                <p>
+                    <span>Tunku</span> <span>Abdul</span> <span>Rahman</span> <span>Putra</span> <span>Al-Haj</span> <span>telah</span> <span>menaikkan</span> <span>semangat</span> <span>perjuangan</span> <span>penduduk</span> <span>Tanah</span> <span>Melayu</span> <span>untuk</span> <span>mendapat</span> <span>kemerdekaan</span> <span>dengan</span> <span>pembentukan</span> <span>Parti</span> <span>Perikatan</span> <span>(UMNO</span> <span>dan</span> <span>MCA)</span> <span>pada</span> <span>1952.</span> <span>Ini</span> <span>merupakan</span> <span>detik</span> <span>permulaan</span> <span>pihak</span> <span>British</span> <span>menyedari</span> <span>kemungkinan</span> <span>besar</span> <span>penduduk</span> <span>Tanah</span> <span>Melayu</span> <span>boleh</span> <span>mentadbir</span> <span>negara</span> <span>mereka</span> <span>sendiri.</span>
+                </p>
+            </div>
+            <div class="section" id="section5">
+                <h2>1955</h2>
+                <img src="image/merdeka5.png" alt="Merdeka Day Image 5">
+                <div class="photo-source">
+                    Photo source: Arkib Negara Malaysia
+                </div>
+                <p>
+                    <span>Kemungkinan</span> <span>ini</span> <span>menjadi</span> <span>kenyataan</span> <span>pada</span> <span>tahun</span> <span>1955</span> <span>apabila</span> <span>Parti</span> <span>Perikatan</span> <span>yang</span> <span>kini</span> <span>juga</span> <span>melibatkan</span> <span>MIC</span> <span>menang</span> <span>besar</span> <span>dalam</span> <span>pilihanraya</span> <span>1955.</span> <span>Ini</span> <span>membawa</span> <span>kepada</span> <span>kejayaan</span> <span>Perjanjian</span> <span>London</span> <span>yang</span> <span>ditandatangani</span> <span>pada</span> <span>8</span> <span>Februari</span> <span>1956,</span> <span>sekaligus</span> <span>memberi</span> <span>petanda</span> <span>bahawa</span> <span>Persekutuan</span> <span>Tanah</span> <span>Melayu</span> <span>akan</span> <span>merdeka</span> <span>pada</span> <span>31</span> <span>Ogos</span> <span>1957.</span>
+                </p>
+            </div>
+            <div class="section" id="section6">
+                <h2>1963</h2>
+                <img src="image/merdeka6.png" alt="Merdeka Day Image 6">
+                <div class="photo-source">
+                    Photo source: Compilation reference from the publication, Expressions of Merdeka Malaysia by Abdul Mutalib Razak , <br>Original photo:NSTP (RCHC), Newsclippings:Utusan Melayu, 16 September 1963
+                </div>
+                <p>
+                    <span>Perjanjian</span> <span>Malaysia</span> <span>telah</span> <span>ditandatangani</span> <span>pada</span> <span>9</span> <span>Julai</span> <span>1963.</span> <span>Menerusinya,</span> <span>Sarawak,</span> <span>Sabah</span> <span>dan</span> <span>Singapura</span> <span>membentuk</span> <span>negara</span> <span>baharu</span> <span>dengan</span> <span>Tanah</span> <span>Melayu</span> <span>berkuatkuasa</span> <span>16</span> <span>September</span> <span>1963.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let currentSection = 0;
+        const sections = document.querySelectorAll('.section');
+        let isThrottled = false;
+
+
+        function showSection(index) {
+            sections.forEach((section, i) => {
+                section.classList.remove('active', 'slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
+               
+                if (i === index) {
+                    section.classList.add('active');
+                    triggerTextAnimation(section);
+                } else if (i < index) {
+                    section.classList.add('slide-out-left');
+                } else if (i > index) {
+                    section.classList.add('slide-in-right');
+                }
+            });
+        }
+
+
+        function triggerTextAnimation(section) {
+            const spans = section.querySelectorAll('p span');
+            setTimeout(() => {
+                spans.forEach((span, index) => {
+                    const delay = 0.3 + (index * 0.15); // Slight delay between each word
+                    span.style.animation = `fade-in 1.5s ${delay}s forwards ease-in-out`; // Smooth animation
+                });
+            }, 300); // Delay text animation to allow slide transition to finish
+        }
+
+
+        function handleScroll(event) {
+            if (isThrottled) return;
+            isThrottled = true;
+            setTimeout(() => {
+                isThrottled = false;
+            }, 1000); // Throttle the scroll event
+
+
+            const previousSection = currentSection;
+
+
+            if (event.deltaY > 0 && currentSection < sections.length - 1) {
+                currentSection += 1;
+                console.log('Scrolling down to section', currentSection);
+                showSection(currentSection);
+            } else if (event.deltaY < 0 && currentSection > 0) {
+                currentSection -= 1;
+                console.log('Scrolling up to section', currentSection);
+                showSection(currentSection);
+            } else if (event.deltaY > 0 && currentSection === sections.length - 1) {
+                console.log('Scrolling down to next section');
+                window.parent.postMessage('nextSection', '*');
+            } else if (event.deltaY < 0 && currentSection === 0) {
+                console.log('Scrolling up to previous section');
+                window.parent.postMessage('prevSection', '*');
+            }
+
+
+            if (previousSection > currentSection) {
+                sections[currentSection].classList.add('slide-in-left');
+            }
+
+
+            showSection(currentSection);
+        }
+
+
+        window.onload = () => {
+            showSection(currentSection);
+        };
+
+
+        window.addEventListener('wheel', handleScroll);
+
+
+        window.addEventListener('message', function(event) {
+            console.log('Message received in section2:', event.data);
+            if (event.data === 'nextSlide') {
+                if (currentSection < sections.length - 1) {
+                    currentSection += 1;
+                    showSection(currentSection);
+                } else {
+                    window.parent.postMessage('nextSection', '*');
+                }
+            } else if (event.data === 'prevSlide') {
+                if (currentSection > 0) {
+                    currentSection -= 1;
+                    showSection(currentSection);
+                } else {
+                    window.parent.postMessage('prevSection', '*');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

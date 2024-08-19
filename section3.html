@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz with Parallax Effect</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: Hepta Slab, sans-serif;
+            font-weight: 500;
+            background: #efecdb;
+            color: #5D4037;
+        }
+
+
+        #slides-holder {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1s, transform 1s;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+
+        .slide.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .slide.out {
+            transform: translateY(-100%);
+        }
+
+
+        .parallax {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+        }
+
+
+        .content {
+            position: relative;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+            z-index: 1;
+            width: 500px;  /* Fixed width */
+            min-height: 300px; /* Minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 20px;
+            box-sizing: border-box;
+        }
+
+
+        .intro-message {
+            text-align: center;
+            font-size: 1.5em;
+            color: #5D4037;
+        }
+
+
+        .intro-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+
+        .invite-text {
+            font-size: 1.2em;
+        }
+
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+
+        .options li {
+            position: relative;
+            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            transition: transform 0.3s ease-in-out;
+        }
+
+
+        .options li:hover {
+            background-color: #f0f0f0;
+        }
+
+
+        .correct {
+            background-color: #d4edda !important; /* Green highlight */
+        }
+
+
+        .correct::after {
+            content: '✔'; /* Tick icon */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: green;
+        }
+
+
+        .incorrect {
+            background-color: #f8d7da !important; /* Red highlight */
+        }
+
+
+        .incorrect::after {
+            content: '✖'; /* Cross icon */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: red;
+        }
+
+
+        .feedback {
+            display: none;
+            margin-top: 10px;
+            color: black;
+            font-size: 1.1em;
+            max-height: 100px; /* Maximum height for feedback */
+            overflow-y: auto; /* Allow scrolling if the feedback is too long */
+        }
+
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+
+        .shake {
+            animation: shake 0.3s;
+        }
+
+
+        .button-wrapper {
+            position: relative;
+        }
+
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+
+        /* Media queries for responsiveness */
+        @media (max-width: 1200px) {
+            .content {
+                width: 80%;
+                height: auto;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .content {
+                width: 90%;
+                height: auto;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+            .content {
+                width: 95%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-holder">
+        <div class="slide visible" id="introSlide">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="intro-message">
+                    <div class="intro-title">Welcome to the Merdeka Quiz!</div>
+                    <div class="invite-text">
+                        Let's test your knowledge about Malaysia's journey to independence and the key figures who made it possible. Are you ready to begin?
+                        <br><br>
+                        Scroll down to start answering the quiz.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide" id="slide1">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="quiz-container">
+                    <div class="question-container">
+                        <div class="question">1. Antara berikut siapakah penjajah barat yang pertama yang menawan Tanah Melayu?</div>
+                        <ul class="options">
+                            <li data-correct="false">Belanda</li>
+                            <li data-correct="false">Parameswara</li>
+                            <li data-correct="false">British</li>
+                            <li data-correct="true">Portugis</li>
+                        </ul>
+                        <div class="feedback">Jawapan: Penjajah pertama adalah Portugis, diikuti dengan Belanda dan kemudiannya British. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide" id="slide2">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="quiz-container">
+                    <div class="question-container">
+                        <div class="question">2. Dalam bendera Malaysia, ada berapa bucu yang ada pada bintang?</div>
+                        <ul class="options">
+                            <li data-correct="true">14</li>
+                            <li data-correct="false">15</li>
+                            <li data-correct="false">16</li>
+                            <li data-correct="false">17</li>
+                        </ul>
+                        <div class="feedback">Jawapan: 14 bucu. 14 bucu ini melambangkan perpaduan antara 13 buah negeri dan Wilayah Persekutuan. Sumber: https://www.mkn.gov.my/web/ms/2022/08/22/trivia-kemerdekaan-2022-jalur-gemilang-bendera-rasmi-malaysia/ </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide" id="slide3">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="quiz-container">
+                    <div class="question-container">
+                        <div class="question">3. Berapakah prinsip-prinsip di dalam Rukun Negara?</div>
+                        <ul class="options">
+                            <li data-correct="false">3</li>
+                            <li data-correct="false">4</li>
+                            <li data-correct="true">5</li>
+                            <li data-correct="false">6</li>
+                        </ul>
+                        <div class="feedback">Jawapan: Terdapat 5 prinsip dalam Rukun Negara iaitu: Kepercayaan kepada Tuhan, Kesetiaan kepada Raja dan Negara, Keluhuran Perlembagaan, Kedaulatan Undang-Undang, Kesopanan dan Kesusilaan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide" id="slide4">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="quiz-container">
+                    <div class="question-container">
+                        <div class="question">4. Tunku Abdul Rahman Putra Al-Haj dikenali sebagai bapa________.</div>
+                        <ul class="options">
+                            <li data-correct="false">Bapa Permodenan</li>
+                            <li data-correct="false">Bapa Pembangunan</li>
+                            <li data-correct="false">Bapa Transformasi Malaysia</li>
+                            <li data-correct="true">Bapa Kemerdekaan</li>
+                        </ul>
+                        <div class="feedback">Jawapan: Tunku Abdul Rahman Putra Al-Haj dikenali sebagai Bapa Kemerdekaan yang bermaksud ‘Father of Independence’ dalam Bahasa Inggeris. Gelaran ini diberikan kepadanya kerana Tunku telah memainkan peranan penting dalam proses mendapatkan kemerdekaan Tanah Melayu daripada penjajahan British. Tunku adalah Perdana Menteri pertama negara ini. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide" id="slide5">
+            <div class="parallax"></div>
+            <div class="content">
+                <div class="quiz-container">
+                    <div class="question-container">
+                        <div class="question">5. Bilakah tarikh penubuhan negara Malaysia?</div>
+                        <ul class="options">
+                            <li data-correct="true">16 September 1963</li>
+                            <li data-correct="false">21 Januari 1978</li>
+                            <li data-correct="false">17 September 1964</li>
+                            <li data-correct="false">31 Ogos 1957</li>
+                        </ul>
+                        <div class="feedback">Jawapan: 16 September 1963. Penubuhan Malaysia melibatkan penggabungan Malaya, Singapura, Sabah dan Sarawak. Singapura telah keluar daripada Malaysia pada tahun 1965.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+       
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $window = $(window);
+            var $slides = $('.slide');
+            var currentIndex = 0;
+            var scrolling = false;
+
+
+            function showSlide(index) {
+                $slides.removeClass('visible out').eq(index).addClass('visible');
+                if (index > 0) {
+                    $slides.eq(index - 1).addClass('out');
+                }
+            }
+
+
+            function handleScroll(event) {
+                if (scrolling) return;  // Prevents handling scroll when already scrolling
+                scrolling = true;
+                if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+                    currentIndex -= 1;
+                    showSlide(currentIndex);
+                } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
+                    window.parent.postMessage('nextSection', '*'); // Go to section4
+                } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*'); // Go back to section2
+                }
+                setTimeout(function() {
+                    scrolling = false;
+                }, 1000);  // Debounce time to control scrolling frequency
+            }
+
+
+            $window.on('wheel', handleScroll);
+
+
+            // Initial display
+            showSlide(currentIndex);
+
+
+            document.querySelectorAll('.options li').forEach(option => {
+                option.addEventListener('click', () => {
+                    const questionContainer = option.closest('.question-container');
+                    const allOptions = questionContainer.querySelectorAll('.options li');
+                    const feedback = questionContainer.querySelector('.feedback');
+
+
+                    allOptions.forEach(opt => {
+                        opt.style.pointerEvents = 'none'; // Disable further clicks
+                    });
+
+
+                    if (option.getAttribute('data-correct') === 'true') {
+                        option.classList.add('correct');
+                        triggerConfetti();
+                    } else {
+                        option.classList.add('incorrect');
+                        option.classList.add('shake');
+                    }
+
+
+                    feedback.style.display = 'block';
+                });
+            });
+
+
+            function triggerConfetti() {
+                let canvas = document.createElement("canvas");
+                let container = document.body;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                canvas.style.position = "fixed";
+                canvas.style.top = "0";
+                canvas.style.left = "0";
+                canvas.style.pointerEvents = "none";
+                canvas.style.zIndex = "10000";
+                container.appendChild(canvas);
+
+
+                let confettiButton = confetti.create(canvas);
+                confettiButton({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                }).then(() => container.removeChild(canvas));
+            }
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Out These Videos</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      color: #000;
+      font-family: HelveticaNeue, helvetica, arial;
+      height: 100%; /* Ensure body and html take up full height */
+    }
+
+    #slides-holder, .slide {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide, .slide.fixed {
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .slide {
+      background-color: #efecdb;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .slide.fixed {
+      position: fixed;
+    }
+
+    .invite-message {
+      font-size: 2em;
+      color: #5D4037;
+      padding: 20px;
+    }
+
+    .scroll-down {
+      font-size: 1.5em;
+      color: #5D4037;
+      margin-top: 20px;
+      animation: bounce 2s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .video-container {
+      width: 80%;
+      height: 80%;
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 20px;
+      background-color: #5D4037;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="slides-holder">
+    <div id="slide-1" class="slide">
+      <div class="invite-message">
+        Let's check out these videos!
+      </div>
+      <div class="scroll-down" onclick="goNextSection()">
+        &#8675; Scroll down &#8675;
+      </div>
+    </div>
+    <div id="slide-2" class="slide">
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/XZeqXUaLfsg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div id="slide-3" class="slide">
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/UeLviBbxIck" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="back-button" onclick="goPrevSection()">Back to Section 4</div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      function goNextSection() {
+          window.parent.postMessage('nextSection', '*');
+      }
+
+      function goPrevSection() {
+          window.parent.postMessage('prevSection', '*');
+      }
+  </script>
+</body>
+</html>

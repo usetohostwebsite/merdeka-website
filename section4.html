@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Scroll with Images</title>
+    <style>
+        body {
+            font-family: Hepta Slab, sans-serif;
+            font-weight: 500;
+            background: #efecdb;
+            color: #5D4037;
+        }
+        * {
+            box-sizing: border-box;
+        }
+       
+        /* hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 1px;
+            height: 1px;
+        }
+       
+        ::-webkit-scrollbar-button {
+            width: 1px;
+            height: 1px;
+        }
+        .external {
+            overflow: hidden;
+            height: 100vh;
+        }
+       
+        .horizontal-scroll-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vh;
+            transform: rotate(-90deg) translate3d(0,-100vh,0);
+            transform-origin: right top;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+            height: 100vw;
+            perspective: 1px;
+            transform-style: preserve-3d;
+            padding-bottom: 10rem;
+        }
+        .img-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40vh;
+            transform-origin: 50% 50%;
+            transform: rotate(90deg) translateZ(.1px) scale(0.9) translateX(0px) translateY(-3vh);
+            transition: 1s;
+            cursor: pointer;
+        }
+       
+        .img-wrapper:hover {
+            min-height: 65vh;
+        }
+       
+        .slower {
+            transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(0%) translateY(-10vh);
+        }
+        .slower1 {
+            transform: rotate(90deg) translateZ(-.25px) scale(1.05) translateX(0%) translateY(8vh);
+        }
+        .slower2 {
+            transform: rotate(90deg) translateZ(-.3px) scale(1.3) translateX(0%) translateY(2vh);
+        }
+        .slower-down {
+            transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(0%) translateY(16vh);
+        }
+        .faster {
+            transform: rotate(90deg) translateZ(.15px) scale(0.8) translateX(0%) translateY(14vh);
+        }
+        .faster1 {
+            transform: rotate(90deg) translateZ(.05px) scale(0.8) translateX(0%) translateY(10vh);
+        }
+        .fastest {
+            transform: rotate(90deg) translateZ(.22px) scale(0.7) translateX(-10vh) translateY(-15vh);
+        }
+        .vertical {
+            transform: rotate(90deg) translateZ(-.15px) scale(1.15) translateX(0%) translateY(0%);
+        }
+        .last {
+            transform: rotate(90deg) translateZ(-.2px) scale(1.1) translateX(25vh) translateY(-8vh);
+        }
+        .scroll-info, header {
+            position: absolute;
+            left: 1rem;
+        }
+       
+        header {
+            bottom: 1rem;
+        }
+        .scroll-info {
+            top: 1rem;
+        }
+        a {
+            color: inherit;
+            font-weight: 500;
+        }
+        h1 {
+            font-weight: 300;
+            font-size: 1rem;
+        }
+       
+        .img-wrapper div {
+            overflow: hidden;
+            display: block;
+            padding: 1vh;
+            background: #efecdb;
+            box-shadow: 0 10px 50px #5f2f1182;
+            position: relative;
+        }
+
+
+        img {
+            max-width: 45vh;
+            max-height: 50vh;
+            transition: .5s;
+            vertical-align: top;
+            filter: saturate(40%) sepia(30%) hue-rotate(5deg);
+            transform: scale(1);
+        }
+
+
+        .img-wrapper:hover img {
+            filter: none;
+            transform: scale(1.1); /* Apply scaling only to the image on hover */
+        }
+
+
+        p {
+            margin: 0;
+        }
+        .scroll-info {
+            display: flex;
+            align-items: center;
+        }
+
+
+        /* Caption styles */
+        .caption {
+            text-align: center;
+            font-size: 1rem;
+            color: #5D4037;
+            margin-top: 0.5rem;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 45vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="external">
+        <div class="horizontal-scroll-wrapper">
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/1. Khaw Kai Boh.jpg" alt="1">
+                    <div class="caption">KHAW KAI BOH BUILDING</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/01.jpg" alt="2">
+                    <div class="caption">KHAW KAI BOH BUILDING</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0006.jpg" alt="3">
+                    <div class="caption">THE ADMINISTRATION BLOCK COSTING 1 MILLION WHICH WAS COMPLETED IN 1976</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/07.jpg" alt="4">
+                    <div class="caption">CAR PARK</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/08.jpg" alt="5">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/12.jpg" alt="6">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0005.jpg" alt="7">
+                    <div class="caption">VIEW OF THE VOLLEYBALL COURTS</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/2. Main Hall.jpg" alt="8">
+                    <div class="caption">THE MAIN HALL</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0008.jpg" alt="9">
+                    <div class="caption">THE ADMINISTRATION BLOCK UNDER CONSTRUCTION</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0013.jpg" alt="10">
+                    <div class="caption">FRONT VIEW OF THE CAMPUS</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/Old photo 17.jpg" alt="11">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/Old photo 20.jpg" alt="12">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/SKM_C45818070511270.jpg" alt="13">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/SKM_C45818070511290.jpg" alt="14">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/03.jpg" alt="15">
+                    <div class="caption">FOUNDING DAY CEREMONY</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/04foundationday01.jpg" alt="16">
+                    <div class="caption">FOUNDATION DAY</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/1970_05_01-R.jpg" alt="17">
+                    <div class="caption">1970s</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/1970s-02.jpg" alt="18">
+                    <div class="caption">1970s</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/ground breaking dinner witn Onn.jpg" alt="19">
+                    <div class="caption">GROUND BREAKING DINNER WITH ONN</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/vip_1.jpg" alt="20">
+                    <div class="caption">THE TENTH ANNIVERSARY <br>CELEBRATION 1979</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/02.jpg" alt="21">
+                    <div class="caption">TREE PLANTED BY Y.T.M. TUNKU <br>ABDUL RAHMAN PUTRA AL-HAJ</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/10.jpg" alt="22">
+                    <div class="caption">TREE PLANTING</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/11.jpg" alt="23">
+                    <div class="caption">TREE PLANTING CEREMONY</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/1970_05_02-R.jpg" alt="24">
+                    <div class="caption">TREE PLANTING</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0004.jpg" alt="25">
+                    <div class="caption">YB DATO' LEW SIP HON, AS THE COLLEGE COUNCIL CHAIRMAN, GAVE A SPEECH AT THE DINNER EVENT HELD ALONGSIDE THE GROUNDBREAKING CEREMONY ON AUGUST 27, 1973</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0007.jpg" alt="26">
+                    <div class="caption">THE LATE Y.T.M. TUNKU ABDUL RAHMAN GAVE A SPEECH AT THE DINNER HELD ALONGSIDE THE GROUNDBREAKING CEREMONY ON AUGUST 27, 1973</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/ilovepdf_merged_page-0009.jpg" alt="27">
+                    <div class="caption">THE LATE Y.T.M. TUNKU ABDUL RAHMAN PUTRA AL-HAJ WAS INTRODUCED TO Y.B. TAN SRI DR. LEE YAN LIAN ON AUGUST 27, 1973.</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/planting_1.jpg" alt="28">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/planting_2.jpg" alt="29">
+                    <div class="caption">TREE WATERING</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/planting_3.jpg" alt="30">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/planting_4.jpg" alt="31">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/planting_5.jpg" alt="32">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/planting_6.jpg" alt="33">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/planting_7.jpg" alt="34">
+                    <div class="caption">VIPs</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/planting_8.jpg" alt="35">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/planting_9.jpg" alt="36">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/planting_10.jpg" alt="37">
+                    <div class="caption">TREE PLANTING</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/069. Plaque Launching.jpg" alt="38">
+                    <div class="caption">PLAQUE LAUNCHING</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/Copy of SKM_C45818112215491.jpg" alt="39">
+                    <div class="caption">PLAQUE LAUNCHING</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/Copy of SKM_C45818112215510.jpg" alt="40">
+                    <div class="caption">OLD PHOTO</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/plaque_1.jpg" alt="41">
+                    <div class="caption">OFFICIAL OPENING OF THE COLLEGE BY THE LATE Y.T.M TUNKU ABDUL RAHMAN PUTRA AL-HAJ ON 24 FEBRUARY 1979.</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/plaque_2.jpg" alt="42">
+                    <div class="caption">THE THEN CHAIRMAN OF COLLEGE <br>COUNCIL YB DATO' LEW SIP HON <br>WELCOMING THE LATE Y.T.M TUNKU <br>ABDUL RAHMAN PUTRA AL-HAJ TO <br>THE OFFICIAL OPENING OF THE <br>COLLEGE.</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/1.jpg" alt="43">
+                    <div class="caption">STUDENTS</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/2.jpg" alt="44">
+                    <div class="caption">STUDENTS</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/3. Old Yam Yam Park (where TTSS and Cyber Centre is now).jpg" alt="45">
+                    <div class="caption">OLD YAM YAM PARK (WHERE TTSS AND CYBER CENTRE IS NOW)</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/3.jpg" alt="46">
+                    <div class="caption">STUDENTS</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/04.jpg" alt="47">
+                    <div class="caption">STUDENTS' LIFESTYLE</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/4.jpg" alt="48">
+                    <div class="caption">MUSICAL PERFORMANCE</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/5.jpg" alt="49">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/06.jpg" alt="50">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/09.jpg" alt="51">
+                    <div class="caption">CONSTRUCTION SITE</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/13.jpg" alt="52">
+                    <div class="caption">STUDENTS' LIFESTYLE</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/14.jpg" alt="53">
+                    <div class="caption">STUDENTS' LIFESTYLE</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/16.jpg" alt="54">
+                    <div class="caption">STUDENTS' LIFESTYLE</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/1970_08_01-R.jpg" alt="55">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/lifestyle_1.jpg" alt="56">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/lifestyle_2.jpg" alt="57">
+                    <div class="caption">THE CAMPUS DINING HALL</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/lifestyle_3.jpg" alt="58">
+                    <div class="caption">STUDENTS STUDYING IN THE CAMPUS MAIN LIBRARY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/lifestyle_4.jpg" alt="59">
+                    <div class="caption">HIGHER EDUCATION PLANNING VISITING THE SCHOOL OF PRE-UNIVERSITY STUDIES AT TECHNICAL INSTITUTE IN 1971</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/lifestyle_5.jpg" alt="60">
+                    <div class="caption">THE PIONEER GROUP OF STUDENTS TAKING PART IN THE NATIONAL DAY CELEBRATIONS IN 1970</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/lifestyle_6.jpg" alt="61">
+                    <div class="caption">PIONEER STUDENTS OF THE SCHOOL OF BUSINESS STUDIES SITTING FOR AN EXAMINATION IN ONE OF THE BORROWED CLASSROOMS AT CATHOLIC HIGH SCHOOL</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower2">
+                <div>
+                    <img src="image/Old photo 16.jpg" alt="62">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+           
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/Old Photos 21.jpg" alt="63">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+
+
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/Old Photos 22.jpg" alt="64">
+                    <div class="caption">ANATOMY CLASS</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster">
+                <div>
+                    <img src="image/Old Photos 23.jpg" alt="65">
+                    <div class="caption">SPORTS ACTIVITY</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower vertical">
+                <div>
+                    <img src="image/Old student photo 4.jpg" alt="66">
+                    <div class="caption">STUDENTS' LIFESTYLE</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower slower-down">
+                <div>
+                    <img src="image/dtar_1.jpg" alt="67">
+                    <div class="caption">DEWAN TUNKU ABDUL RAHMAN (DTAR)</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper">
+                <div>
+                    <img src="image/IMG_3027.JPG" alt="68">
+                    <div class="caption">DEWAN TUNKU ABDUL RAHMAN (DTAR)</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper slower">
+                <div>
+                    <img src="image/IMG_3035.JPG" alt="69">
+                    <div class="caption">DEWAN TUNKU ABDUL RAHMAN (DTAR)</div>
+                </div>
+            </div>
+       
+            <div class="img-wrapper faster1">
+                <div>
+                    <img src="image/IMG_3037.JPG" alt="7">
+                    <div class="caption">DEWAN TUNKU ABDUL RAHMAN (DTAR)</div>
+                </div>
+            </div>
+   
+        </div>
+        <p class="scroll-info">Try scrolling down on PC, up on mobile<br><br>Hover on PC or long press on mobile to see effects</p>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
+            let isThrottled = false;
+    
+            function handleScroll(event) {
+                if (isThrottled) return;
+                isThrottled = true;
+                setTimeout(() => {
+                    isThrottled = false;
+                }, 500);
+    
+                const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
+                const currentScrollTop = horizontalScrollWrapper.scrollTop;
+    
+                console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
+    
+                // Detect if we've scrolled close enough to the bottom to consider it the end
+                if (event.deltaY > 0 && currentScrollTop >= maxScrollTop - 10) {
+                    console.log("Approaching the bottom of Section 4, sending 'nextSection' message");
+                    window.parent.postMessage('nextSection', '*');
+                } else if (event.deltaY < 0 && currentScrollTop <= 0) {
+                    console.log("Reached the top of Section 4, sending 'prevSection' message");
+                    window.parent.postMessage('prevSection', '*');
+                }
+            }
+    
+            horizontalScrollWrapper.addEventListener('wheel', handleScroll);
+        });
+    </script>
+    
+   
+</body>
+</html>

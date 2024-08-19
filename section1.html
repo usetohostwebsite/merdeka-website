@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link to Croissant One Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Croissant+One&display=swap" rel="stylesheet">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: url('image/banner2.png') no-repeat center center fixed;
+            background-size: cover;
+            transition: opacity 1s ease-in-out;
+            opacity: 1;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Croissant One', cursive;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        h1 {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 62px;
+            color: #191970;
+            z-index: 100;
+        }
+
+        h2,
+        h3 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #2B547E;
+            z-index: 100;
+        }
+
+        h2 {
+            top: 200px;
+            font-size: 30px;
+        }
+
+        h3 {
+            top: 280px;
+            font-size: 20px;
+        }
+
+        span {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(4px);
+        }
+
+        /* Animation for "Hari Merdeka" */
+        h1 span:nth-child(1) {
+            animation: fade-in 0.5s 0.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(2) {
+            animation: fade-in 0.5s 0.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(3) {
+            animation: fade-in 0.5s 0.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(4) {
+            animation: fade-in 0.5s 0.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(5) {
+            animation: fade-in 0.5s 0.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(6) {
+            animation: fade-in 0.5s 0.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(7) {
+            animation: fade-in 0.5s 0.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(8) {
+            animation: fade-in 0.5s 0.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(9) {
+            animation: fade-in 0.5s 0.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(10) {
+            animation: fade-in 0.5s 1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(11) {
+            animation: fade-in 0.5s 1.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h1 span:nth-child(12) {
+            animation: fade-in 0.5s 1.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        /* Animation for "MALAYSIA INDEPENDENCE DAY" */
+        h2 span:nth-child(1) {
+            animation: fade-in 0.5s 1.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(2) {
+            animation: fade-in 0.5s 1.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(3) {
+            animation: fade-in 0.5s 2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(4) {
+            animation: fade-in 0.5s 2.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(5) {
+            animation: fade-in 0.5s 2.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(6) {
+            animation: fade-in 0.5s 2.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(7) {
+            animation: fade-in 0.5s 2.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(8) {
+            animation: fade-in 0.5s 2.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(9) {
+            animation: fade-in 0.5s 2.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(10) {
+            animation: fade-in 0.5s 2.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(11) {
+            animation: fade-in 0.5s 2.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(12) {
+            animation: fade-in 0.5s 2.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(13) {
+            animation: fade-in 0.5s 3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(14) {
+            animation: fade-in 0.5s 3.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(15) {
+            animation: fade-in 0.5s 3.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(16) {
+            animation: fade-in 0.5s 3.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(17) {
+            animation: fade-in 0.5s 3.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(18) {
+            animation: fade-in 0.5s 3.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(19) {
+            animation: fade-in 0.5s 3.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(20) {
+            animation: fade-in 0.5s 3.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(21) {
+            animation: fade-in 0.5s 3.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(22) {
+            animation: fade-in 0.5s 3.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(23) {
+            animation: fade-in 0.5s 4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(24) {
+            animation: fade-in 0.5s 4.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h2 span:nth-child(25) {
+            animation: fade-in 0.5s 4.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        /* Animation for "--AUGUST 31--" */
+        h3 span:nth-child(1) {
+            animation: fade-in 0.5s 4.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(2) {
+            animation: fade-in 0.5s 4.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(3) {
+            animation: fade-in 0.5s 5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(4) {
+            animation: fade-in 0.5s 5.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(5) {
+            animation: fade-in 0.5s 5.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(6) {
+            animation: fade-in 0.5s 5.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(7) {
+            animation: fade-in 0.5s 5.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(8) {
+            animation: fade-in 0.5s 5.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(9) {
+            animation: fade-in 0.5s 5.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(10) {
+            animation: fade-in 0.5s 5.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        h3 span:nth-child(11) {
+            animation: fade-in 0.5s 5.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        .fade-in {
+            opacity: 1;
+        }
+
+        @keyframes fade-in {
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        /* Scroll Down Prompt */
+        .scroll-down {
+            position: absolute;
+            top: 360px; /* Adjust this value as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Croissant One', cursive;
+            color: #2B547E;
+            font-size: 18px;
+            z-index: 100;
+            cursor: pointer;
+            opacity: 0;
+            filter: blur(4px);
+            animation: fade-in 0.5s 6.5s forwards cubic-bezier(0.11, 0, 0.5, 0); /* Delayed for sequential appearance */
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <!-- Hari Merdeka animated text, letter by letter -->
+    <h1 class="pacifico-regular">
+        <span>H</span>
+        <span>a</span>
+        <span>r</span>
+        <span>i</span>
+        <span>&nbsp;</span>
+        <span>M</span>
+        <span>e</span>
+        <span>r</span>
+        <span>d</span>
+        <span>e</span>
+        <span>k</span>
+        <span>a</span>
+    </h1>
+
+    <!-- MALAYSIA INDEPENDENCE DAY -->
+    <h2 class="pacifico-regular">
+        <span>M</span>
+        <span>A</span>
+        <span>L</span>
+        <span>A</span>
+        <span>Y</span>
+        <span>S</span>
+        <span>I</span>
+        <span>A</span>
+        <span>&nbsp;</span>
+        <span>I</span>
+        <span>N</span>
+        <span>D</span>
+        <span>E</span>
+        <span>P</span>
+        <span>E</span>
+        <span>N</span>
+        <span>D</span>
+        <span>E</span>
+        <span>N</span>
+        <span>C</span>
+        <span>E</span>
+        <span>&nbsp;</span>
+        <span>D</span>
+        <span>A</span>
+        <span>Y</span>
+    </h2>
+
+    <!-- --AUGUST 31-- -->
+    <h3 class="pacifico-regular">
+        <span>--</span>
+        <span>3</span>
+        <span>1</span>
+        <span>&nbsp;</span>
+        <span>A</span>
+        <span>U</span>
+        <span>G</span>
+        <span>U</span>
+        <span>S</span>
+        <span>T</span>
+        <span>--</span>
+    </h3>
+
+    <!-- Scroll Down Prompt -->
+    <div class="scroll-down" onclick="goNextSection()">
+        &#8675; Scroll down &#8675;
+    </div>
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var SCREEN_WIDTH = window.innerWidth;
+        var SCREEN_HEIGHT = window.innerHeight;
+        var particles = [];
+        var rockets = [];
+        var MAX_PARTICLES = 400;
+        var loopInterval, launchInterval;
+
+        canvas.width = SCREEN_WIDTH;
+        canvas.height = SCREEN_HEIGHT;
+
+        window.onresize = function () {
+            canvas.width = SCREEN_WIDTH = window.innerWidth;
+            canvas.height = SCREEN_HEIGHT = window.innerHeight;
+        };
+
+        function Particle(pos) {
+            this.pos = {
+                x: pos ? pos.x : 0,
+                y: pos ? pos.y : 0
+            };
+            this.vel = {
+                x: 0,
+                y: 0
+            };
+            this.shrink = 0.97;
+            this.size = 2;
+            this.resistance = 1;
+            this.gravity = 0;
+            this.flick = false;
+            this.alpha = 1;
+            this.fade = 0;
+            this.color = 0;
+        }
+
+        Particle.prototype.update = function () {
+            this.vel.x *= this.resistance;
+            this.vel.y *= this.resistance;
+            this.vel.y += this.gravity;
+            this.pos.x += this.vel.x;
+            this.pos.y += this.vel.y;
+            this.size *= this.shrink;
+            this.alpha -= this.fade;
+        };
+
+        Particle.prototype.render = function (c) {
+            if (!this.exists()) return;
+
+            c.save();
+            c.globalCompositeOperation = 'lighter';
+            var x = this.pos.x,
+                y = this.pos.y,
+                r = this.size / 2;
+            var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
+            gradient.addColorStop(0.1, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")"); // Core color
+            gradient.addColorStop(0.8, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
+            gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 100%, 0.1)");
+            c.fillStyle = gradient;
+            c.beginPath();
+            c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size : this.size, 0, Math.PI * 2, true);
+            c.closePath();
+            c.fill();
+            c.restore();
+        };
+
+        Particle.prototype.exists = function () {
+            return this.alpha >= 0.1 && this.size >= 1;
+        };
+
+        function Rocket(x) {
+            Particle.apply(this, [{
+                x: x,
+                y: SCREEN_HEIGHT
+            }]);
+            this.explosionColor = Math.floor(Math.random() * 360); // Assign a random color
+            this.color = this.explosionColor; // Set the rocket color
+        }
+
+        Rocket.prototype = new Particle();
+        Rocket.prototype.constructor = Rocket;
+
+        Rocket.prototype.explode = function () {
+            var count = Math.random() * 10 + 80;
+            for (var i = 0; i < count; i++) {
+                var particle = new Particle(this.pos);
+                var angle = Math.random() * Math.PI * 2;
+                var speed = Math.cos(Math.random() * Math.PI / 2) * 15;
+                particle.vel.x = Math.cos(angle) * speed;
+                particle.vel.y = Math.sin(angle) * speed;
+                particle.size = 10;
+                particle.gravity = 0.2;
+                particle.resistance = 0.92;
+                particle.shrink = Math.random() * 0.05 + 0.93;
+                particle.flick = true;
+                particle.color = this.explosionColor; // Use the rocket's explosion color
+                particles.push(particle);
+            }
+        };
+
+        Rocket.prototype.render = function (c) {
+            if (!this.exists()) return;
+            c.save();
+            c.globalCompositeOperation = 'lighter';
+            var x = this.pos.x,
+                y = this.pos.y,
+                r = this.size / 2;
+            var gradient = c.createRadialGradient(x, y, 0.1, x, y, r);
+            gradient.addColorStop(0.1, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
+            gradient.addColorStop(1, "hsla(" + this.color + ", 100%, 50%, " + this.alpha + ")");
+            c.fillStyle = gradient;
+            c.beginPath();
+            c.arc(this.pos.x, this.pos.y, this.flick ? Math.random() * this.size / 2 + this.size / 2 : this.size, 0, Math.PI * 2, true);
+            c.closePath();
+            c.fill();
+            c.restore();
+        };
+
+        var loop = function () {
+            if (SCREEN_WIDTH != window.innerWidth) {
+                canvas.width = SCREEN_WIDTH = window.innerWidth;
+            }
+            if (SCREEN_HEIGHT != window.innerHeight) {
+                canvas.height = SCREEN_HEIGHT = window.innerHeight;
+            }
+
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = "rgba(0, 0, 0, 0.2)";
+            context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+            context.globalCompositeOperation = 'lighter';
+
+            var existingRockets = [];
+            for (var i = 0; i < rockets.length; i++) {
+                rockets[i].update();
+                rockets[i].render(context);
+                var distance = Math.sqrt(Math.pow(SCREEN_WIDTH - rockets[i].pos.x, 2) + Math.pow(SCREEN_HEIGHT - rockets[i].pos.y, 2));
+                var randomChance = rockets[i].pos.y < (SCREEN_HEIGHT * 2 / 3) ? (Math.random() * 100 <= 1) : false;
+                if (rockets[i].pos.y < SCREEN_HEIGHT / 5 || rockets[i].vel.y >= 0 || distance < 50 || randomChance) {
+                    rockets[i].explode();
+                } else {
+                    existingRockets.push(rockets[i]);
+                }
+            }
+
+            rockets = existingRockets;
+
+            var existingParticles = [];
+            for (i = 0; i < particles.length; i++) {
+                particles[i].update();
+                if (particles[i].exists()) {
+                    particles[i].render(context);
+                    existingParticles.push(particles[i]);
+                }
+            }
+            particles = existingParticles;
+
+            while (particles.length > MAX_PARTICLES) {
+                particles.shift();
+            }
+        };
+
+        var launchFrom = function (x) {
+            if (rockets.length < 10) {
+                var rocket = new Rocket(x);
+                rocket.explosionColor = Math.floor(Math.random() * 360); // Random color
+                rocket.color = rocket.explosionColor; // Set rocket color
+                rocket.vel.y = Math.random() * -3 - 4;
+                rocket.vel.x = Math.random() * 6 - 3;
+                rocket.size = 8;
+                rocket.shrink = 0.999;
+                rocket.gravity = 0.01;
+                rockets.push(rocket);
+            }
+        };
+
+        var launch = function () {
+            launchFrom(SCREEN_WIDTH / 2);
+        };
+
+        function startFireworks() {
+            launchInterval = setInterval(launch, 400);
+            loopInterval = setInterval(loop, 1000 / 60);
+        }
+
+        function stopFireworks() {
+            clearInterval(launchInterval);
+            clearInterval(loopInterval);
+            rockets = []; // Clear rockets
+            particles = []; // Clear particles
+            context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        }
+
+        startFireworks(); // Start fireworks on load
+
+        let currentSlide = 0;
+        const maxSlides = 1;
+
+        function handleMessage(event) {
+            if (event.data === 'nextSlide' && currentSlide < maxSlides) {
+                currentSlide += 1;
+                fadeOut();
+                setTimeout(() => {
+                    window.parent.postMessage('nextSection', '*');
+                    stopFireworks(); // Stop fireworks when moving to the next section
+                }, 1000);
+            } else if (event.data === 'prevSlide' && currentSlide > 0) {
+                currentSlide -= 1;
+                fadeOut();
+                setTimeout(() => {
+                    window.parent.postMessage('prevSection', '*');
+                    stopFireworks(); // Stop fireworks when moving to the previous section
+                }, 1000);
+            }
+        }
+
+        function fadeOut() {
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                fadeIn();
+            }, 1000);
+        }
+
+        function fadeIn() {
+            document.body.classList.remove('fade-out');
+        }
+
+        function goNextSection() {
+            fadeOut();
+            setTimeout(() => {
+                window.parent.postMessage('nextSection', '*');
+                stopFireworks(); // Stop fireworks when scrolling down
+            }, 1000);
+        }
+
+        window.addEventListener('message', handleMessage);
+
+        window.addEventListener('wheel', (event) => {
+            if (event.deltaY > 0) {
+                fadeOut();
+                setTimeout(() => {
+                    window.parent.postMessage('nextSection', '*');
+                    stopFireworks(); // Stop fireworks when scrolling down
+                }, 1000);
+            } else if (event.deltaY < 0) {
+                fadeOut();
+                setTimeout(() => {
+                    window.parent.postMessage('prevSection', '*');
+                    stopFireworks(); // Stop fireworks when scrolling up
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>
