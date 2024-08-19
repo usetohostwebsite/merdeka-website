@@ -683,6 +683,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
             let isThrottled = false;
+            let touchStartY = 0;
+            let touchEndY = 0;
     
             function handleScroll(event) {
                 if (isThrottled) return;
@@ -706,7 +708,31 @@
                 }
             }
     
+            function handleTouchStart(event) {
+                touchStartY = event.touches[0].clientY;
+            }
+    
+            function handleTouchMove(event) {
+                touchEndY = event.touches[0].clientY;
+            }
+    
+            function handleTouchEnd() {
+                const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
+                const currentScrollTop = horizontalScrollWrapper.scrollTop;
+    
+                if (touchStartY - touchEndY > 50 && currentScrollTop >= maxScrollTop - 10) {
+                    // Swipe up
+                    window.parent.postMessage('nextSection', '*');
+                } else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
+                    // Swipe down
+                    window.parent.postMessage('prevSection', '*');
+                }
+            }
+    
             horizontalScrollWrapper.addEventListener('wheel', handleScroll);
+            window.addEventListener('touchstart', handleTouchStart, false);
+            window.addEventListener('touchmove', handleTouchMove, false);
+            window.addEventListener('touchend', handleTouchEnd, false);
         });
     </script>
     
