@@ -703,36 +703,36 @@
             let isThrottled = false;
             let touchStartY = 0;
             let touchEndY = 0;
-
+    
             function handleScroll(event) {
                 if (isThrottled) return;
                 isThrottled = true;
                 setTimeout(() => {
                     isThrottled = false;
                 }, 500);
-
+    
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
-
+    
                 console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
-
+    
                 // Disable scroll transitions in favor of button controls
                 event.preventDefault();
                 return;
             }
-
+    
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
             }
-
+    
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
             }
-
+    
             function handleTouchEnd() {
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
-
+    
                 if (touchStartY - touchEndY > 50 && currentScrollTop >= maxScrollTop - 10) {
                     // Swipe up
                     window.parent.postMessage('nextSection', '*');
@@ -741,22 +741,23 @@
                     window.parent.postMessage('prevSection', '*');
                 }
             }
-
+    
             horizontalScrollWrapper.addEventListener('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, false);
             window.addEventListener('touchmove', handleTouchMove, false);
             window.addEventListener('touchend', handleTouchEnd, false);
         });
-
+    
         // Function to send a message to the parent window to move to section3
         function moveToPreviousSection() {
             window.parent.postMessage('prevSection', '*');
         }
-
+    
         // Function to send a message to the parent window to move to section5
         function moveToNextSection() {
             window.parent.postMessage('nextSection', '*');
         }
     </script>
+    
 </body>
 </html>
