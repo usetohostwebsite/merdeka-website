@@ -117,7 +117,6 @@
             position: relative;
         }
 
-
         img {
             max-width: 45vh;
             max-height: 50vh;
@@ -127,12 +126,10 @@
             transform: scale(1);
         }
 
-
         .img-wrapper:hover img {
             filter: none;
             transform: scale(1.1); /* Apply scaling only to the image on hover */
         }
-
 
         p {
             margin: 0;
@@ -141,7 +138,6 @@
             display: flex;
             align-items: center;
         }
-
 
         /* Caption styles */
         .caption {
@@ -153,250 +149,270 @@
             white-space: normal;
             max-width: 45vh;
         }
+
+        /* Buttons */
+        .navigation-button {
+            position: absolute;
+            bottom: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #5D4037;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation-button:hover {
+            background-color: #3e2a26;
+        }
+
+        .back-button {
+            left: 20px;
+        }
+
+        .next-button {
+            right: 20px;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .navigation-button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navigation-button {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="external">
         <div class="horizontal-scroll-wrapper">
+            <!-- Your images and captions -->
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/1. Khaw Kai Boh.jpg" alt="1">
                     <div class="caption">KHAW KAI BOH BUILDING</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper faster">
                 <div>
                     <img src="image/01.jpg" alt="2">
                     <div class="caption">KHAW KAI BOH BUILDING</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper slower vertical">
                 <div>
                     <img src="image/ilovepdf_merged_page-0006.jpg" alt="3">
                     <div class="caption">THE ADMINISTRATION BLOCK COSTING 1 MILLION WHICH WAS COMPLETED IN 1976</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/07.jpg" alt="4">
                     <div class="caption">CAR PARK</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper">
                 <div>
                     <img src="image/08.jpg" alt="5">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/12.jpg" alt="6">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-       
+            
             <div class="img-wrapper faster1">
                 <div>
                     <img src="image/ilovepdf_merged_page-0005.jpg" alt="7">
                     <div class="caption">VIEW OF THE VOLLEYBALL COURTS</div>
                 </div>
             </div>
-           
+            
             <div class="img-wrapper slower slower2">
                 <div>
                     <img src="image/2. Main Hall.jpg" alt="8">
                     <div class="caption">THE MAIN HALL</div>
                 </div>
             </div>
-           
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/ilovepdf_merged_page-0008.jpg" alt="9">
                     <div class="caption">THE ADMINISTRATION BLOCK UNDER CONSTRUCTION</div>
                 </div>
             </div>
-           
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/ilovepdf_merged_page-0013.jpg" alt="10">
                     <div class="caption">FRONT VIEW OF THE CAMPUS</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper faster">
                 <div>
                     <img src="image/Old photo 17.jpg" alt="11">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower vertical">
                 <div>
                     <img src="image/Old photo 20.jpg" alt="12">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/SKM_C45818070511270.jpg" alt="13">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper">
                 <div>
                     <img src="image/SKM_C45818070511290.jpg" alt="14">
                     <div class="caption">OLD PHOTO</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/03.jpg" alt="15">
                     <div class="caption">FOUNDING DAY CEREMONY</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper faster1">
                 <div>
                     <img src="image/04foundationday01.jpg" alt="16">
                     <div class="caption">FOUNDATION DAY</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower2">
                 <div>
                     <img src="image/1970_05_01-R.jpg" alt="17">
                     <div class="caption">1970s</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/1970s-02.jpg" alt="18">
                     <div class="caption">1970s</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/ground breaking dinner witn Onn.jpg" alt="19">
                     <div class="caption">GROUND BREAKING DINNER WITH ONN</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper faster">
                 <div>
                     <img src="image/vip_1.jpg" alt="20">
                     <div class="caption">THE TENTH ANNIVERSARY <br>CELEBRATION 1979</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower vertical">
                 <div>
                     <img src="image/02.jpg" alt="21">
                     <div class="caption">TREE PLANTED BY Y.T.M. TUNKU <br>ABDUL RAHMAN PUTRA AL-HAJ</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/10.jpg" alt="22">
                     <div class="caption">TREE PLANTING</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper">
                 <div>
                     <img src="image/11.jpg" alt="23">
                     <div class="caption">TREE PLANTING CEREMONY</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/1970_05_02-R.jpg" alt="24">
                     <div class="caption">TREE PLANTING</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper faster1">
                 <div>
                     <img src="image/ilovepdf_merged_page-0004.jpg" alt="25">
                     <div class="caption">YB DATO' LEW SIP HON, AS THE COLLEGE COUNCIL CHAIRMAN, GAVE A SPEECH AT THE DINNER EVENT HELD ALONGSIDE THE GROUNDBREAKING CEREMONY ON AUGUST 27, 1973</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower2">
                 <div>
                     <img src="image/ilovepdf_merged_page-0007.jpg" alt="26">
                     <div class="caption">THE LATE Y.T.M. TUNKU ABDUL RAHMAN GAVE A SPEECH AT THE DINNER HELD ALONGSIDE THE GROUNDBREAKING CEREMONY ON AUGUST 27, 1973</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/ilovepdf_merged_page-0009.jpg" alt="27">
                     <div class="caption">THE LATE Y.T.M. TUNKU ABDUL RAHMAN PUTRA AL-HAJ WAS INTRODUCED TO Y.B. TAN SRI DR. LEE YAN LIAN ON AUGUST 27, 1973.</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower">
                 <div>
                     <img src="image/planting_1.jpg" alt="28">
                     <div class="caption">VIPs</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper faster">
                 <div>
                     <img src="image/planting_2.jpg" alt="29">
                     <div class="caption">TREE WATERING</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower vertical">
                 <div>
                     <img src="image/planting_3.jpg" alt="30">
                     <div class="caption">VIPs</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper slower slower-down">
                 <div>
                     <img src="image/planting_4.jpg" alt="31">
                     <div class="caption">VIPs</div>
                 </div>
             </div>
-
-
+            
             <div class="img-wrapper">
                 <div>
                     <img src="image/planting_5.jpg" alt="32">
@@ -673,11 +689,13 @@
                     <div class="caption">DEWAN TUNKU ABDUL RAHMAN (DTAR)</div>
                 </div>
             </div>
-   
         </div>
         <p class="scroll-info"><br>Try scrolling down on PC, up on mobile<br><br>Hover on PC or long press on mobile to see effects</p>
-    </div>
 
+        <!-- Navigation buttons -->
+        <button class="navigation-button back-button" onclick="moveToPreviousSection()">Back to Section 3</button>
+        <button class="navigation-button next-button" onclick="moveToNextSection()">Proceed to Section 5</button>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -685,81 +703,60 @@
             let isThrottled = false;
             let touchStartY = 0;
             let touchEndY = 0;
-            let touchStartX = 0;
-            let touchEndX = 0;
-    
+
             function handleScroll(event) {
                 if (isThrottled) return;
                 isThrottled = true;
                 setTimeout(() => {
                     isThrottled = false;
                 }, 500);
-    
+
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
-    
-                // Check if the user is scrolling to the bottom and trigger the next section
-                if (event.deltaY > 0 && currentScrollTop >= maxScrollTop - 10) {
-                    console.log("Approaching the bottom, sending 'nextSection' message");
-                    window.parent.postMessage('nextSection', '*');
-                }
-                // Check if the user is scrolling to the top and trigger the previous section
-                else if (event.deltaY < 0 && currentScrollTop <= 0) {
-                    console.log("Reached the top, sending 'prevSection' message");
-                    window.parent.postMessage('prevSection', '*');
-                }
+
+                console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
+
+                // Disable scroll transitions in favor of button controls
+                event.preventDefault();
+                return;
             }
-    
+
             function handleTouchStart(event) {
-                // Record the starting position of the touch event
                 touchStartY = event.touches[0].clientY;
-                touchStartX = event.touches[0].clientX;
             }
-    
+
             function handleTouchMove(event) {
-                // Update the touch end position during the movement
                 touchEndY = event.touches[0].clientY;
-                touchEndX = event.touches[0].clientX;
-    
-                const deltaX = touchStartX - touchEndX;
-                const deltaY = touchStartY - touchEndY;
-    
-                // If horizontal movement is more significant than vertical, perform scroll
-                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
-                    horizontalScrollWrapper.scrollTop += deltaX;
-    
-                    // Prevent vertical scrolling if the swipe is more horizontal
-                    event.preventDefault();
-                }
-    
-                // Reset touch start positions for the next movement
-                touchStartX = touchEndX;
-                touchStartY = touchEndY;
             }
-    
+
             function handleTouchEnd() {
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
-    
-                // Check if the swipe up has reached the bottom and trigger the next section
+
                 if (touchStartY - touchEndY > 50 && currentScrollTop >= maxScrollTop - 10) {
+                    // Swipe up
                     window.parent.postMessage('nextSection', '*');
-                }
-                // Check if the swipe down has reached the top and trigger the previous section
-                else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
+                } else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
+                    // Swipe down
                     window.parent.postMessage('prevSection', '*');
                 }
             }
-    
-            // Attach event listeners for mouse wheel scrolling
+
             horizontalScrollWrapper.addEventListener('wheel', handleScroll);
-            // Attach event listeners for touch start, move, and end events
-            horizontalScrollWrapper.addEventListener('touchstart', handleTouchStart, false);
-            horizontalScrollWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
-            horizontalScrollWrapper.addEventListener('touchend', handleTouchEnd, false);
+            window.addEventListener('touchstart', handleTouchStart, false);
+            window.addEventListener('touchmove', handleTouchMove, false);
+            window.addEventListener('touchend', handleTouchEnd, false);
         });
+
+        // Function to send a message to the parent window to move to section3
+        function moveToPreviousSection() {
+            window.parent.postMessage('prevSection', '*');
+        }
+
+        // Function to send a message to the parent window to move to section5
+        function moveToNextSection() {
+            window.parent.postMessage('nextSection', '*');
+        }
     </script>
-    
-   
 </body>
 </html>
