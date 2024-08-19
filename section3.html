@@ -16,14 +16,12 @@
             color: #5D4037;
         }
 
-
         #slides-holder {
             position: relative;
             width: 100%;
             height: 100vh;
             overflow: hidden;
         }
-
 
         .slide {
             position: absolute;
@@ -38,17 +36,14 @@
             transform: translateY(100%);
         }
 
-
         .slide.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-
         .slide.out {
             transform: translateY(-100%);
         }
-
 
         .parallax {
             position: absolute;
@@ -61,7 +56,6 @@
             background-size: cover;
             z-index: -1;
         }
-
 
         .content {
             position: relative;
@@ -79,13 +73,11 @@
             box-sizing: border-box;
         }
 
-
         .intro-message {
             text-align: center;
             font-size: 1.5em;
             color: #5D4037;
         }
-
 
         .intro-title {
             font-size: 2em;
@@ -93,11 +85,9 @@
             margin-bottom: 20px;
         }
 
-
         .invite-text {
             font-size: 1.2em;
         }
-
 
         .quiz-container {
             display: flex;
@@ -106,18 +96,15 @@
             height: 100%;
         }
 
-
         .question {
             margin-bottom: 10px;
         }
-
 
         .options {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
-
 
         .options li {
             position: relative;
@@ -130,16 +117,13 @@
             transition: transform 0.3s ease-in-out;
         }
 
-
         .options li:hover {
             background-color: #f0f0f0;
         }
 
-
         .correct {
             background-color: #d4edda !important; /* Green highlight */
         }
-
 
         .correct::after {
             content: '✔'; /* Tick icon */
@@ -150,11 +134,9 @@
             color: green;
         }
 
-
         .incorrect {
             background-color: #f8d7da !important; /* Red highlight */
         }
-
 
         .incorrect::after {
             content: '✖'; /* Cross icon */
@@ -165,7 +147,6 @@
             color: red;
         }
 
-
         .feedback {
             display: none;
             margin-top: 10px;
@@ -175,7 +156,6 @@
             overflow-y: auto; /* Allow scrolling if the feedback is too long */
         }
 
-
         @keyframes shake {
             0% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -184,16 +164,13 @@
             100% { transform: translateX(0); }
         }
 
-
         .shake {
             animation: shake 0.3s;
         }
 
-
         .button-wrapper {
             position: relative;
         }
-
 
         canvas {
             position: absolute;
@@ -203,7 +180,6 @@
             z-index: 10000;
         }
 
-
         /* Media queries for responsiveness */
         @media (max-width: 1200px) {
             .content {
@@ -212,19 +188,51 @@
             }
         }
 
-
         @media (max-width: 768px) {
             .content {
                 width: 90%;
                 height: auto;
+                padding: 15px;
+            }
+            .intro-title {
+                font-size: 1.8em;
+            }
+            .invite-text {
+                font-size: 1em;
+            }
+            .quiz-container .question {
+                font-size: 1.2em;
+            }
+            .options li {
+                font-size: 1em;
+                padding: 8px;
+            }
+            .feedback {
+                font-size: 1em;
             }
         }
-
 
         @media (max-width: 480px) {
             .content {
                 width: 95%;
                 height: auto;
+                padding: 10px;
+            }
+            .intro-title {
+                font-size: 1.5em;
+            }
+            .invite-text {
+                font-size: 0.9em;
+            }
+            .quiz-container .question {
+                font-size: 1.1em;
+            }
+            .options li {
+                font-size: 0.9em;
+                padding: 7px;
+            }
+            .feedback {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -329,9 +337,6 @@
                 </div>
             </div>
         </div>
-
-
-       
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
@@ -341,7 +346,8 @@
             var $slides = $('.slide');
             var currentIndex = 0;
             var scrolling = false;
-
+            var touchStartY = 0;
+            var touchEndY = 0;
 
             function showSlide(index) {
                 $slides.removeClass('visible out').eq(index).addClass('visible');
@@ -349,7 +355,6 @@
                     $slides.eq(index - 1).addClass('out');
                 }
             }
-
 
             function handleScroll(event) {
                 if (scrolling) return;  // Prevents handling scroll when already scrolling
@@ -370,13 +375,37 @@
                 }, 1000);  // Debounce time to control scrolling frequency
             }
 
+            function handleTouchStart(event) {
+                touchStartY = event.touches[0].clientY;
+            }
+
+            function handleTouchMove(event) {
+                touchEndY = event.touches[0].clientY;
+            }
+
+            function handleTouchEnd() {
+                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+                    // Swipe up
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                    // Swipe down
+                    currentIndex -= 1;
+                    showSlide(currentIndex);
+                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                    window.parent.postMessage('nextSection', '*');
+                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*');
+                }
+            }
 
             $window.on('wheel', handleScroll);
-
+            window.addEventListener('touchstart', handleTouchStart, false);
+            window.addEventListener('touchmove', handleTouchMove, false);
+            window.addEventListener('touchend', handleTouchEnd, false);
 
             // Initial display
             showSlide(currentIndex);
-
 
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', () => {
@@ -384,11 +413,9 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
 
-
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
                     });
-
 
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
@@ -398,11 +425,9 @@
                         option.classList.add('shake');
                     }
 
-
                     feedback.style.display = 'block';
                 });
             });
-
 
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
@@ -416,7 +441,6 @@
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
 
-
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -426,7 +450,6 @@
             }
         });
     </script>
+
 </body>
 </html>
-
-
