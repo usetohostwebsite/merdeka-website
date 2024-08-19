@@ -727,11 +727,11 @@
                 const deltaX = touchStartX - touchEndX;
                 const deltaY = touchStartY - touchEndY;
     
-                // Translate horizontal swipe to vertical scroll
-                horizontalScrollWrapper.scrollTop += deltaX;
-    
-                // Prevent vertical scrolling if the swipe is more horizontal than vertical
+                // If horizontal movement is more significant than vertical, perform scroll
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    horizontalScrollWrapper.scrollTop += deltaX;
+    
+                    // Prevent vertical scrolling if the swipe is more horizontal
                     event.preventDefault();
                 }
     
