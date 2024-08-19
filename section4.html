@@ -45,6 +45,7 @@
             transform-style: preserve-3d;
             padding-bottom: 10rem;
         }
+        
         .img-wrapper {
             position: relative;
             display: flex;
@@ -700,30 +701,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
-            let isThrottled = false;
             let startX = 0;
             let scrollLeft = 0;
     
-            function handleScroll(event) {
-                if (isThrottled) return;
-                isThrottled = true;
-                setTimeout(() => {
-                    isThrottled = false;
-                }, 500);
-    
-                const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
-                const currentScrollTop = horizontalScrollWrapper.scrollTop;
-    
-                console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
-    
+            // Handle mouse wheel scroll (for desktop)
+            horizontalScrollWrapper.addEventListener('wheel', function(event) {
                 event.preventDefault();
-                return;
-            }
+                horizontalScrollWrapper.scrollTop += event.deltaY; // Keep this for rotated scrolling
+            });
     
-            // Handle mouse wheel scroll
-            horizontalScrollWrapper.addEventListener('wheel', handleScroll);
-    
-            // Touch events for mobile
+            // Touch events for mobile devices
             horizontalScrollWrapper.addEventListener('touchstart', (e) => {
                 startX = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
                 scrollLeft = horizontalScrollWrapper.scrollLeft;
@@ -732,17 +719,17 @@
             horizontalScrollWrapper.addEventListener('touchmove', (e) => {
                 e.preventDefault(); // Prevent vertical scroll
                 const x = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
-                const walk = (x - startX) * 3; // 3 is a multiplier to increase sensitivity
+                const walk = (x - startX) * 1.5; // Adjust sensitivity as needed
                 horizontalScrollWrapper.scrollLeft = scrollLeft - walk;
             });
     
-            window.addEventListener('touchend', function() {
+            horizontalScrollWrapper.addEventListener('touchend', function() {
                 const maxScrollLeft = horizontalScrollWrapper.scrollWidth - horizontalScrollWrapper.clientWidth;
                 const currentScrollLeft = horizontalScrollWrapper.scrollLeft;
     
-                if (scrollLeft - horizontalScrollWrapper.scrollLeft > 100 && currentScrollLeft >= maxScrollLeft - 50) {
+                if (scrollLeft - currentScrollLeft > 100 && currentScrollLeft >= maxScrollLeft - 50) {
                     window.parent.postMessage('nextSection', '*');
-                } else if (horizontalScrollWrapper.scrollLeft - scrollLeft > 100 && currentScrollLeft <= 50) {
+                } else if (currentScrollLeft - scrollLeft > 100 && currentScrollLeft <= 50) {
                     window.parent.postMessage('prevSection', '*');
                 }
             });
