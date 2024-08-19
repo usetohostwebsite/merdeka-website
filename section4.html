@@ -685,6 +685,8 @@
             let isThrottled = false;
             let touchStartY = 0;
             let touchEndY = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
     
             function handleScroll(event) {
                 if (isThrottled) return;
@@ -710,10 +712,20 @@
     
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
+                touchStartX = event.touches[0].clientX;
             }
     
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
+                touchEndX = event.touches[0].clientX;
+    
+                const deltaX = touchStartX - touchEndX;
+                const deltaY = touchStartY - touchEndY;
+    
+                // Allow horizontal scrolling by translating touch movements to vertical scroll
+                horizontalScrollWrapper.scrollTop += deltaX; // Translate horizontal swipe to vertical scroll
+                touchStartX = touchEndX; // Reset for the next movement
+                touchStartY = touchEndY; // Reset for the next movement
             }
     
             function handleTouchEnd() {
@@ -730,9 +742,9 @@
             }
     
             horizontalScrollWrapper.addEventListener('wheel', handleScroll);
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
+            horizontalScrollWrapper.addEventListener('touchstart', handleTouchStart, false);
+            horizontalScrollWrapper.addEventListener('touchmove', handleTouchMove, false);
+            horizontalScrollWrapper.addEventListener('touchend', handleTouchEnd, false);
         });
     </script>
     
