@@ -181,6 +181,23 @@
             z-index: 10000;
         }
 
+        /* New style for the button */
+        .next-section-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #5D4037;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .next-section-button:hover {
+            background-color: #3e2a26;
+        }
+
         /* Media queries for responsiveness */
         @media (max-width: 1200px) {
             .content {
@@ -211,6 +228,10 @@
             .feedback {
                 font-size: 1em;
             }
+            .next-section-button {
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -234,6 +255,10 @@
             }
             .feedback {
                 font-size: 0.9em;
+            }
+            .next-section-button {
+                font-size: 0.8em;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -335,10 +360,13 @@
                         </ul>
                         <div class="feedback">Jawapan: 16 September 1963. Penubuhan Malaysia melibatkan penggabungan Malaya, Singapura, Sabah dan Sarawak. Singapura telah keluar daripada Malaysia pada tahun 1965.</div>
                     </div>
+                    <!-- New button to move to the next section -->
+                    <button class="next-section-button" onclick="moveToNextSection()">Proceed to Next Section</button>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script>
@@ -362,15 +390,13 @@
                 if (scrolling) return;  // Prevents handling scroll when already scrolling
                 scrolling = true;
                 if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+                    // Scroll down (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
                 } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+                    // Scroll up (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
-                    window.parent.postMessage('nextSection', '*'); // Go to section4
-                } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
                 setTimeout(function() {
                     scrolling = false;
@@ -393,17 +419,13 @@
                 }
     
                 if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
-                    // Swipe up
+                    // Swipe up (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
                 } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
-                    // Swipe down
+                    // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                    window.parent.postMessage('nextSection', '*');
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*');
                 }
             }
     
@@ -457,8 +479,14 @@
                 }).then(() => container.removeChild(canvas));
             }
         });
+    
+        // Function to send a message to the parent window to move to section4
+        function moveToNextSection() {
+            window.parent.postMessage('nextSection', '*');
+        }
     </script>
     
+
 
 </body>
 </html>
