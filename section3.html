@@ -349,14 +349,15 @@
             var scrolling = false;
             var touchStartY = 0;
             var touchEndY = 0;
-
+            var touchStartElement = null; // To store the element where the touch started
+    
             function showSlide(index) {
                 $slides.removeClass('visible out').eq(index).addClass('visible');
                 if (index > 0) {
                     $slides.eq(index - 1).addClass('out');
                 }
             }
-
+    
             function handleScroll(event) {
                 if (scrolling) return;  // Prevents handling scroll when already scrolling
                 scrolling = true;
@@ -375,16 +376,22 @@
                     scrolling = false;
                 }, 1000);  // Debounce time to control scrolling frequency
             }
-
+    
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
+                touchStartElement = event.target; // Store the element where the touch started
             }
-
+    
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
             }
-
+    
             function handleTouchEnd() {
+                if (touchStartElement.closest('.options')) {
+                    // If the touch started on an option, don't scroll
+                    return;
+                }
+    
                 if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
                     // Swipe up
                     currentIndex += 1;
@@ -399,26 +406,25 @@
                     window.parent.postMessage('prevSection', '*');
                 }
             }
-
+    
             $window.on('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, false);
             window.addEventListener('touchmove', handleTouchMove, false);
             window.addEventListener('touchend', handleTouchEnd, false);
-
+    
             // Initial display
             showSlide(currentIndex);
-
+    
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', () => {
-                    scrolling = true; // Disable scroll handling
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
-
+    
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
                     });
-
+    
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
                         triggerConfetti();
@@ -426,15 +432,11 @@
                         option.classList.add('incorrect');
                         option.classList.add('shake');
                     }
-
+    
                     feedback.style.display = 'block';
-
-                    setTimeout(function() {
-                        scrolling = false; // Re-enable scroll handling after selection
-                    }, 1000);  // Delay to allow feedback to be displayed
                 });
             });
-
+    
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
                 let container = document.body;
@@ -446,7 +448,7 @@
                 canvas.style.pointerEvents = "none";
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
-
+    
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -456,6 +458,7 @@
             }
         });
     </script>
+    
 
 </body>
 </html>
