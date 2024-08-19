@@ -698,55 +698,71 @@
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
-                console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
+                // Log the scroll position for debugging purposes
+                console.log("Scroll Event. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
     
-                // Detect if we've scrolled close enough to the bottom to consider it the end
+                // Check if the user is scrolling to the bottom and trigger the next section
                 if (event.deltaY > 0 && currentScrollTop >= maxScrollTop - 10) {
-                    console.log("Approaching the bottom of Section 4, sending 'nextSection' message");
+                    console.log("Approaching the bottom, sending 'nextSection' message");
                     window.parent.postMessage('nextSection', '*');
-                } else if (event.deltaY < 0 && currentScrollTop <= 0) {
-                    console.log("Reached the top of Section 4, sending 'prevSection' message");
+                }
+                // Check if the user is scrolling to the top and trigger the previous section
+                else if (event.deltaY < 0 && currentScrollTop <= 0) {
+                    console.log("Reached the top, sending 'prevSection' message");
                     window.parent.postMessage('prevSection', '*');
                 }
             }
     
             function handleTouchStart(event) {
+                // Record the starting position of the touch event
                 touchStartY = event.touches[0].clientY;
                 touchStartX = event.touches[0].clientX;
             }
     
             function handleTouchMove(event) {
+                // Update the touch end position during the movement
                 touchEndY = event.touches[0].clientY;
                 touchEndX = event.touches[0].clientX;
     
                 const deltaX = touchStartX - touchEndX;
                 const deltaY = touchStartY - touchEndY;
     
-                // Allow horizontal scrolling by translating touch movements to vertical scroll
-                horizontalScrollWrapper.scrollTop += deltaX; // Translate horizontal swipe to vertical scroll
-                touchStartX = touchEndX; // Reset for the next movement
-                touchStartY = touchEndY; // Reset for the next movement
+                // Translate horizontal swipe to vertical scroll
+                horizontalScrollWrapper.scrollTop += deltaX;
+    
+                // Prevent vertical scrolling if the swipe is more horizontal than vertical
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    event.preventDefault();
+                }
+    
+                // Reset touch start positions for the next movement
+                touchStartX = touchEndX;
+                touchStartY = touchEndY;
             }
     
             function handleTouchEnd() {
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
+                // Check if the swipe up has reached the bottom and trigger the next section
                 if (touchStartY - touchEndY > 50 && currentScrollTop >= maxScrollTop - 10) {
-                    // Swipe up
                     window.parent.postMessage('nextSection', '*');
-                } else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
-                    // Swipe down
+                }
+                // Check if the swipe down has reached the top and trigger the previous section
+                else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
                     window.parent.postMessage('prevSection', '*');
                 }
             }
     
+            // Attach event listeners for mouse wheel scrolling
             horizontalScrollWrapper.addEventListener('wheel', handleScroll);
+            // Attach event listeners for touch start, move, and end events
             horizontalScrollWrapper.addEventListener('touchstart', handleTouchStart, false);
-            horizontalScrollWrapper.addEventListener('touchmove', handleTouchMove, false);
+            horizontalScrollWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
             horizontalScrollWrapper.addEventListener('touchend', handleTouchEnd, false);
         });
     </script>
+    
     
    
 </body>
