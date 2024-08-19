@@ -12,7 +12,8 @@
             overflow-x: hidden;
             font-family: Hepta Slab, sans-serif;
             font-weight: 500;
-            background: #efecdb;
+            background: url('image/background5.png') no-repeat center center fixed; /* Set the background image */
+            background-size: cover; /* Make sure the background image covers the entire page */
             color: #5D4037;
         }
 
@@ -409,6 +410,7 @@
 
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', () => {
+                    scrolling = true; // Disable scroll handling
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
@@ -426,6 +428,10 @@
                     }
 
                     feedback.style.display = 'block';
+
+                    setTimeout(function() {
+                        scrolling = false; // Re-enable scroll handling after selection
+                    }, 1000);  // Delay to allow feedback to be displayed
                 });
             });
 
