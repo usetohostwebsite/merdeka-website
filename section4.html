@@ -701,8 +701,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
             let isThrottled = false;
-            let touchStartY = 0;
-            let touchEndY = 0;
+            let startX = 0;
+            let scrollLeft = 0;
     
             function handleScroll(event) {
                 if (isThrottled) return;
@@ -716,48 +716,47 @@
     
                 console.log("Scroll Event in Section 4. ScrollTop:", currentScrollTop, "MaxScrollTop:", maxScrollTop);
     
-                // Disable scroll transitions in favor of button controls
                 event.preventDefault();
                 return;
             }
     
-            function handleTouchStart(event) {
-                touchStartY = event.touches[0].clientY;
-            }
+            // Handle mouse wheel scroll
+            horizontalScrollWrapper.addEventListener('wheel', handleScroll);
     
-            function handleTouchMove(event) {
-                touchEndY = event.touches[0].clientY;
-            }
+            // Touch events for mobile
+            horizontalScrollWrapper.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
+                scrollLeft = horizontalScrollWrapper.scrollLeft;
+            });
     
-            function handleTouchEnd() {
-                const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
-                const currentScrollTop = horizontalScrollWrapper.scrollTop;
+            horizontalScrollWrapper.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Prevent vertical scroll
+                const x = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
+                const walk = (x - startX) * 3; // 3 is a multiplier to increase sensitivity
+                horizontalScrollWrapper.scrollLeft = scrollLeft - walk;
+            });
     
-                if (touchStartY - touchEndY > 50 && currentScrollTop >= maxScrollTop - 10) {
-                    // Swipe up
+            window.addEventListener('touchend', function() {
+                const maxScrollLeft = horizontalScrollWrapper.scrollWidth - horizontalScrollWrapper.clientWidth;
+                const currentScrollLeft = horizontalScrollWrapper.scrollLeft;
+    
+                if (scrollLeft - horizontalScrollWrapper.scrollLeft > 100 && currentScrollLeft >= maxScrollLeft - 50) {
                     window.parent.postMessage('nextSection', '*');
-                } else if (touchEndY - touchStartY > 50 && currentScrollTop <= 0) {
-                    // Swipe down
+                } else if (horizontalScrollWrapper.scrollLeft - scrollLeft > 100 && currentScrollLeft <= 50) {
                     window.parent.postMessage('prevSection', '*');
                 }
-            }
-    
-            horizontalScrollWrapper.addEventListener('wheel', handleScroll);
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
+            });
         });
     
-        // Function to send a message to the parent window to move to section3
         function moveToPreviousSection() {
             window.parent.postMessage('prevSection', '*');
         }
     
-        // Function to send a message to the parent window to move to section5
         function moveToNextSection() {
             window.parent.postMessage('nextSection', '*');
         }
     </script>
+    
     
 </body>
 </html>
