@@ -711,25 +711,25 @@
             });
     
             // Touch events for mobile devices
-            horizontalScrollWrapper.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
-                scrollLeft = horizontalScrollWrapper.scrollLeft;
+            horizontalScrollWrapper.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientY; // Adjusted for vertical direction
+                scrollLeft = horizontalScrollWrapper.scrollTop; // Adjusted for vertical scroll
             });
     
-            horizontalScrollWrapper.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevent vertical scroll
-                const x = e.touches[0].pageX - horizontalScrollWrapper.offsetLeft;
-                const walk = (x - startX) * 1.5; // Adjust sensitivity as needed
-                horizontalScrollWrapper.scrollLeft = scrollLeft - walk;
+            horizontalScrollWrapper.addEventListener('touchmove', function(e) {
+                e.preventDefault(); // Prevent vertical scroll on non-rotated elements
+                const y = e.touches[0].clientY;
+                const walk = (y - startX) * 1.5; // Adjust sensitivity as needed
+                horizontalScrollWrapper.scrollTop = scrollLeft - walk; // Adjusted for vertical scroll
             });
     
             horizontalScrollWrapper.addEventListener('touchend', function() {
-                const maxScrollLeft = horizontalScrollWrapper.scrollWidth - horizontalScrollWrapper.clientWidth;
-                const currentScrollLeft = horizontalScrollWrapper.scrollLeft;
+                const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
+                const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
-                if (scrollLeft - currentScrollLeft > 100 && currentScrollLeft >= maxScrollLeft - 50) {
+                if (scrollLeft - currentScrollTop > 100 && currentScrollTop >= maxScrollTop - 50) {
                     window.parent.postMessage('nextSection', '*');
-                } else if (currentScrollLeft - scrollLeft > 100 && currentScrollLeft <= 50) {
+                } else if (currentScrollTop - scrollLeft > 100 && currentScrollTop <= 50) {
                     window.parent.postMessage('prevSection', '*');
                 }
             });
@@ -743,6 +743,7 @@
             window.parent.postMessage('nextSection', '*');
         }
     </script>
+    
     
     
 </body>
