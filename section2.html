@@ -186,7 +186,7 @@
         function showSection(index) {
             sections.forEach((section, i) => {
                 section.classList.remove('active', 'slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
-                
+    
                 if (i === index) {
                     section.classList.add('active');
                 } else if (i < index) {
@@ -202,31 +202,31 @@
             isThrottled = true;
             setTimeout(() => {
                 isThrottled = false;
-            }, 1000); // Throttle the scroll event
+            }, 1000); // Throttle the scroll event to avoid excessive triggering
     
             const previousSection = currentSection;
     
             if (event.deltaY > 0 && currentSection < sections.length - 1) {
+                // Scrolling down
                 currentSection += 1;
-                console.log('Scrolling down to section', currentSection);
                 showSection(currentSection);
             } else if (event.deltaY < 0 && currentSection > 0) {
+                // Scrolling up
                 currentSection -= 1;
-                console.log('Scrolling up to section', currentSection);
                 showSection(currentSection);
             } else if (event.deltaY > 0 && currentSection === sections.length - 1) {
-                console.log('Scrolling down to next section');
+                // At the last section and trying to scroll down
                 window.parent.postMessage('nextSection', '*');
             } else if (event.deltaY < 0 && currentSection === 0) {
-                console.log('Scrolling up to previous section');
+                // At the first section and trying to scroll up
                 window.parent.postMessage('prevSection', '*');
             }
     
             if (previousSection > currentSection) {
                 sections[currentSection].classList.add('slide-in-left');
+            } else if (previousSection < currentSection) {
+                sections[currentSection].classList.add('slide-in-right');
             }
-    
-            showSection(currentSection);
         }
     
         // Handling touch events for scrolling on mobile devices
@@ -258,24 +258,24 @@
                 if (yDiff > 0 && currentSection < sections.length - 1) {
                     // Up swipe (scroll down)
                     currentSection += 1;
-                    console.log('Swiping up to section', currentSection);
                     showSection(currentSection);
                 } else if (yDiff < 0 && currentSection > 0) {
                     // Down swipe (scroll up)
                     currentSection -= 1;
-                    console.log('Swiping down to section', currentSection);
                     showSection(currentSection);
                 } else if (yDiff > 0 && currentSection === sections.length - 1) {
-                    console.log('Swiping up to next section');
+                    // Swiping up at the last section
                     window.parent.postMessage('nextSection', '*');
                 } else if (yDiff < 0 && currentSection === 0) {
-                    console.log('Swiping down to previous section');
+                    // Swiping down at the first section
                     window.parent.postMessage('prevSection', '*');
                 }
             }
     
             if (previousSection > currentSection) {
                 sections[currentSection].classList.add('slide-in-left');
+            } else if (previousSection < currentSection) {
+                sections[currentSection].classList.add('slide-in-right');
             }
     
             xDown = null;
@@ -293,7 +293,6 @@
         window.addEventListener('touchmove', handleTouchMove, false);
     
         window.addEventListener('message', function(event) {
-            console.log('Message received in section2:', event.data);
             if (event.data === 'nextSlide') {
                 if (currentSection < sections.length - 1) {
                     currentSection += 1;
@@ -311,6 +310,7 @@
             }
         });
     </script>
+    
     
 </body>
 </html>
