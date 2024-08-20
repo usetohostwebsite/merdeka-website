@@ -73,9 +73,18 @@
         /* Mobile-specific styles */
         @media only screen and (max-width: 480px) {
 
+            .scroll-down {
+                position: relative; /* Change to relative positioning */
+                bottom: 0;
+                left: 0;
+                transform: none; /* Remove transform for proper alignment */
+                margin-top: 20px; /* Add some space above the text */
+            }
+
+
             body,
             html {
-                background-position: 10% center !important; /* Focus on the left part of the image */
+                background-position: 3% center !important; /* Focus on the left part of the image */
                 background-size: cover; /* Ensure the image covers the screen while focusing on the left */
                 background-repeat: no-repeat;
             }
