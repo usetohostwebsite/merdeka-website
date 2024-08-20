@@ -87,6 +87,53 @@
       cursor: pointer;
       font-size: 1em;
     }
+
+    /* Tablet-specific styles */
+    @media only screen and (max-width: 768px) {
+      .invite-message {
+        font-size: 1.5em;
+      }
+
+      .scroll-down {
+        font-size: 1.2em;
+      }
+
+      .back-button {
+        font-size: 0.9em;
+        padding: 8px 16px;
+      }
+
+      .video-container {
+        width: 90%;
+        height: 60%; /* Adjust height for tablets */
+      }
+    }
+
+    /* Mobile-specific styles */
+    @media only screen and (max-width: 480px) {
+      .invite-message {
+        font-size: 1.2em;
+      }
+
+      .scroll-down {
+        font-size: 1em;
+      }
+
+      .back-button {
+        font-size: 0.8em;
+        padding: 6px 12px;
+      }
+
+      .video-container {
+        width: 100%;
+        height: 50%; /* Adjust height for mobile */
+      }
+
+      .video-container iframe {
+        width: 100%;
+        height: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -119,9 +166,12 @@
 
       function handleScroll(event) {
           if (event.originalEvent.deltaY > 0) {
+              // Scroll down to the next section (e.g., next video or whatever is after this section)
               window.parent.postMessage('nextSection', '*');
           } else if (event.originalEvent.deltaY < 0) {
-              window.parent.postMessage('prevSection', '*');
+              // Prevent scrolling up to go back to the previous section
+              console.log("Scrolling up is disabled. Use the button to go back to Section 4.");
+              // Do nothing here, effectively disabling scroll up
           }
       }
 
@@ -135,29 +185,34 @@
 
       function handleTouchEnd() {
           if (touchStartY - touchEndY > 50) {
-              // Swipe up
+              // Swipe up (go to the next section)
               window.parent.postMessage('nextSection', '*');
           } else if (touchEndY - touchStartY > 50) {
-              // Swipe down
-              window.parent.postMessage('prevSection', '*');
+              // Prevent swiping down to go back to the previous section
+              console.log("Swiping down is disabled. Use the button to go back to Section 4.");
+              // Do nothing here, effectively disabling swipe down
           }
       }
 
       $(document).ready(function () {
+          // Handle mouse wheel scroll events
           $(window).on('wheel', handleScroll);
+
+          // Handle touch events for mobile devices
           window.addEventListener('touchstart', handleTouchStart, false);
           window.addEventListener('touchmove', handleTouchMove, false);
           window.addEventListener('touchend', handleTouchEnd, false);
       });
 
+      // Function to handle moving to the next section (e.g., triggered by a button)
       function goNextSection() {
           window.parent.postMessage('nextSection', '*');
       }
 
+      // Function to handle moving back to Section 4 (only triggered by the button)
       function goPrevSection() {
           window.parent.postMessage('prevSection', '*');
       }
   </script>
-
 </body>
 </html>
