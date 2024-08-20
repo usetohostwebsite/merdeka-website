@@ -380,9 +380,13 @@
             var touchStartElement = null; // To store the element where the touch started
     
             function showSlide(index) {
-                $slides.removeClass('visible out').eq(index).addClass('visible');
+                $slides.removeClass('visible out');
+                $slides.eq(index).addClass('visible');
                 if (index > 0) {
                     $slides.eq(index - 1).addClass('out');
+                }
+                if (index < $slides.length - 1) {
+                    $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
                 }
             }
     
@@ -397,10 +401,14 @@
                     // Scroll up (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
+                } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
+                    window.parent.postMessage('nextSection', '*'); // Go to section4
+                } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
                 setTimeout(function() {
                     scrolling = false;
-                }, 1000);  // Debounce time to control scrolling frequency
+                }, 500);  // Adjusted debounce time to allow smoother scrolling
             }
     
             function handleTouchStart(event) {
@@ -426,6 +434,10 @@
                     // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
+                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                    window.parent.postMessage('nextSection', '*');
+                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*');
                 }
             }
     
@@ -479,14 +491,7 @@
                 }).then(() => container.removeChild(canvas));
             }
         });
-    
-        // Function to send a message to the parent window to move to section4
-        function moveToNextSection() {
-            window.parent.postMessage('nextSection', '*');
-        }
     </script>
     
-
-
 </body>
 </html>
