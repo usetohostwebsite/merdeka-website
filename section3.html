@@ -440,6 +440,15 @@
                     window.parent.postMessage('prevSection', '*');
                 }
             }
+
+            function moveToNextSection() {
+                if (currentIndex < $slides.length - 1) {
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else {
+                    window.parent.postMessage('nextSection', '*');
+                }
+            }
     
             $window.on('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, false);
