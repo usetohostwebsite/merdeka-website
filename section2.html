@@ -263,6 +263,12 @@
                     // Down swipe (scroll up)
                     currentSection -= 1;
                     console.log('Swiping down to section', currentSection);
+                } else if (yDiff > 0 && currentSection === sections.length - 1) {
+                    console.log('Swiping up to next section');
+                    window.parent.postMessage('nextSection', '*');
+                } else if (yDiff < 0 && currentSection === 0) {
+                    console.log('Swiping down to previous section');
+                    window.parent.postMessage('prevSection', '*');
                 }
     
                 // Ensure correct animation direction
@@ -312,7 +318,5 @@
             }
         });
     </script>
-    
-    
 </body>
 </html>
