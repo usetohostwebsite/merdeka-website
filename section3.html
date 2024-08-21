@@ -501,12 +501,13 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
     
+                    // Prevent the click from triggering any scroll or slide change
+                    event.preventDefault();
+                    event.stopPropagation(); // Prevent click event from propagating up
+    
                     // Disable slide change temporarily after selecting an option
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
-    
-                    event.preventDefault(); // Prevent touch scroll behavior
-                    event.stopPropagation(); // Stop the event from bubbling up
     
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
@@ -527,6 +528,15 @@
                         disableSlideChange = false;
                         optionSelected = false; // Reset optionSelected after a delay
                     }, 1000); // Increase timing to ensure no scroll happens immediately
+                });
+    
+                // Prevent default touch behavior when interacting with quiz options (prevent unintended slide changes)
+                option.addEventListener('touchstart', function (event) {
+                    event.stopPropagation();
+                });
+    
+                option.addEventListener('wheel', function (event) {
+                    event.stopPropagation();
                 });
             });
     
