@@ -474,21 +474,11 @@
             window.removeEventListener('touchend', handleTouchEnd);
         }
     
-        function preventUnintendedTapScrolling() {
-            // Prevent taps from triggering scroll on the body
-            document.body.addEventListener('touchstart', function(event) {
-                if (!event.target.closest('.options li')) {
-                    event.preventDefault(); // Prevent the default action if the target is not a quiz option
-                }
-            }, { passive: false });
-        }
-    
         $(document).ready(function () {
             $slides = $('.slide');
     
             if (isTouchDevice) {
                 addTouchListeners();
-                preventUnintendedTapScrolling(); // Only prevent tap-to-scroll, not taps on quiz options
             } else {
                 $(window).on('wheel', handleScroll);
             }
@@ -501,13 +491,12 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
     
-                    // Prevent the click from triggering any scroll or slide change
-                    event.preventDefault();
-                    event.stopPropagation(); // Prevent click event from propagating up
-    
                     // Disable slide change temporarily after selecting an option
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
+    
+                    event.preventDefault(); // Prevent touch scroll behavior
+                    event.stopPropagation(); // Stop the event from bubbling up
     
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
@@ -530,12 +519,8 @@
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
     
-                // Prevent default touch behavior when interacting with quiz options (prevent unintended slide changes)
+                // Prevent slide change from accidental scroll on touch devices
                 option.addEventListener('touchstart', function (event) {
-                    event.stopPropagation();
-                });
-    
-                option.addEventListener('wheel', function (event) {
                     event.stopPropagation();
                 });
             });
@@ -561,7 +546,6 @@
             }
         });
     </script>
-    
 
 </body>
 </html>
