@@ -390,19 +390,13 @@
                 currentIndex += 1;
                 showSlide(currentIndex);
     
-                // Temporarily disable scroll and touch handling to prevent interference
+                // Temporarily disable scroll handling to prevent interference
                 disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
-                window.removeEventListener('touchstart', handleTouchStart);
-                window.removeEventListener('touchmove', handleTouchMove);
-                window.removeEventListener('touchend', handleTouchEnd);
     
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
-                    window.addEventListener('touchstart', handleTouchStart, false);
-                    window.addEventListener('touchmove', handleTouchMove, false);
-                    window.addEventListener('touchend', handleTouchEnd, false);
                 }, 1000); // Re-enable after 1 second or adjust as needed
             } else {
                 window.parent.postMessage('nextSection', '*');
@@ -491,7 +485,12 @@
                 }
             }
     
-            $window.on('wheel', handleScroll);
+            // Only attach the scroll event listener if the device is not a touch device
+            if (!('ontouchstart' in window)) {
+                $window.on('wheel', handleScroll);
+            }
+    
+            // Always attach touch events for touch devices
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
