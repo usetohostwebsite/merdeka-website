@@ -474,11 +474,21 @@
             window.removeEventListener('touchend', handleTouchEnd);
         }
     
+        function preventUnintendedTapScrolling() {
+            // Prevent taps from triggering scroll on the body
+            document.body.addEventListener('touchstart', function(event) {
+                if (!event.target.closest('.options li')) {
+                    event.preventDefault(); // Prevent the default action if the target is not a quiz option
+                }
+            }, { passive: false });
+        }
+    
         $(document).ready(function () {
             $slides = $('.slide');
     
             if (isTouchDevice) {
                 addTouchListeners();
+                preventUnintendedTapScrolling(); // Only prevent tap-to-scroll, not taps on quiz options
             } else {
                 $(window).on('wheel', handleScroll);
             }
@@ -541,7 +551,6 @@
             }
         });
     </script>
-
 
 </body>
 </html>
