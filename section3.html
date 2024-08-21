@@ -519,10 +519,12 @@
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
     
-                // Prevent slide change from accidental scroll on touch devices
-                option.addEventListener('touchstart', function (event) {
-                    event.stopPropagation();
-                });
+                if (isTouchDevice) {
+                    // Prevent slide change from accidental scroll on touch devices
+                    option.addEventListener('touchstart', function (event) {
+                        event.stopPropagation();
+                    });
+                }
             });
     
             function triggerConfetti() {
