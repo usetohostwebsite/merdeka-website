@@ -381,9 +381,8 @@
         var touchStartTime = 0; // To track the time of touch start
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 5; // Threshold for swipe detection
+        const scrollThreshold = 10; // Lower threshold for more responsive swipe detection
         const tapThreshold = 200; // Maximum time in ms for a tap
-        const tapDistanceThreshold = 10; // Maximum distance in pixels for a tap
     
         // Function to detect if the device is touch-enabled
         function isTouchDevice() {
@@ -483,30 +482,29 @@
             function handleTouchEnd(event) {
                 var touchEndTime = new Date().getTime();
                 var touchDuration = touchEndTime - touchStartTime;
-                var touchDistance = Math.abs(touchEndY - touchStartY);
     
                 if (optionSelected) return;  // Block slide changes if an option is selected
     
-                // Detect a tap: short duration and small movement
-                if (touchDuration < tapThreshold && touchDistance < tapDistanceThreshold) {
-                    return; // This was a tap, so do not process as a swipe
+                if (touchDuration < tapThreshold) {
+                    return; // If touch is short (a tap), do not process as a swipe
                 }
     
-                // Detect a swipe
-                if (touchDistance >= scrollThreshold && !disableSlideChange) {
-                    if (touchStartY - touchEndY > 0 && currentIndex < $slides.length - 1) {
-                        // Swipe up (next section)
-                        currentIndex += 1;
-                        showSlide(currentIndex);
-                    } else if (touchEndY - touchStartY > 0 && currentIndex > 0) {
-                        // Swipe down (previous section)
-                        currentIndex -= 1;
-                        showSlide(currentIndex);
-                    } else if (touchStartY - touchEndY > 0 && currentIndex === $slides.length - 1) {
-                        console.log("Swiping is disabled. Use the button to proceed.");
-                    } else if (touchEndY - touchStartY > 0 && currentIndex === 0) {
-                        window.parent.postMessage('prevSection', '*'); // Go back to section2
-                    }
+                if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange) {
+                    return; // Ignore small swipes and prevent default behavior if sliding is disabled
+                }
+    
+                if (touchStartY - touchEndY > scrollThreshold && currentIndex < $slides.length - 1) {
+                    // Swipe up (next section)
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex > 0) {
+                    // Swipe down (previous section)
+                    currentIndex -= 1;
+                    showSlide(currentIndex);
+                } else if (touchStartY - touchEndY > scrollThreshold && currentIndex === $slides.length - 1) {
+                    console.log("Swiping is disabled. Use the button to proceed.");
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
     
@@ -573,6 +571,7 @@
             }
         });
     </script>
+
 
 </body>
 </html>
