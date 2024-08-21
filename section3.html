@@ -372,45 +372,13 @@
     <script>
         var $slides;
         var currentIndex = 0;
-        var isThrottled = false;
-        var scrollTimeout = null;
         var disableSlideChange = false; // Flag to disable slide change temporarily
         var optionSelected = false; // Flag to track if an option was selected
         var touchStartY = 0;
         var touchEndY = 0;
     
-        // Set a threshold for the scroll delta
-        const scrollThreshold = 8;
-    
         function moveToNextSection() {
-            if (isThrottled || disableSlideChange || optionSelected) return;
-    
-            if (currentIndex < $slides.length - 1) {
-                currentIndex += 1;
-                showSlide(currentIndex);
-    
-                // Temporarily disable scroll and touch handling to prevent interference
-                disableSlideChange = true;
-                $(window).off('wheel', handleScroll);
-                window.removeEventListener('touchstart', handleTouchStart);
-                window.removeEventListener('touchmove', handleTouchMove);
-                window.removeEventListener('touchend', handleTouchEnd);
-    
-                setTimeout(() => {
-                    disableSlideChange = false;
-                    $(window).on('wheel', handleScroll);
-                    window.addEventListener('touchstart', handleTouchStart, false);
-                    window.addEventListener('touchmove', handleTouchMove, false);
-                    window.addEventListener('touchend', handleTouchEnd, false);
-                }, 1000); // Re-enable after 1 second or adjust as needed
-            } else {
-                window.parent.postMessage('nextSection', '*');
-            }
-    
-            isThrottled = true;
-            setTimeout(() => {
-                isThrottled = false;
-            }, 500); // Adjust timing as needed
+            window.location.href = 'section4.html'; // Navigate to the next section
         }
     
         $(document).ready(function () {
@@ -429,54 +397,21 @@
                 }
             }
     
-            function handleScroll(event) {
-                if (scrolling || isThrottled || disableSlideChange || optionSelected) return;
-    
-                isThrottled = true;
-                scrollTimeout = setTimeout(() => {
-                    isThrottled = false;
-                }, 200);
-    
-                const deltaY = event.originalEvent.deltaY;
-    
-                if (Math.abs(deltaY) < scrollThreshold) return;
-    
-                scrolling = true;
-    
-                if (deltaY > 0 && currentIndex < $slides.length - 1) {
-                    // Scroll down (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (deltaY < 0 && currentIndex > 0) {
-                    // Scroll up (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
-                    console.log("Scrolling is disabled. Use the button to proceed.");
-                } else if (deltaY < 0 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
-                }
-    
-                setTimeout(function() {
-                    scrolling = false;
-                }, 1000);  // Debounce time to allow smoother scrolling
-            }
-    
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
             }
     
             function handleTouchMove(event) {
-                if (optionSelected) {
-                    event.preventDefault(); // Prevent default scroll behavior if an option was selected
+                if (optionSelected || disableSlideChange) {
+                    event.preventDefault(); // Prevent scroll if an option is selected or slide change is disabled
+                    return;
                 }
+    
                 touchEndY = event.touches[0].clientY;
             }
     
             function handleTouchEnd(event) {
-                if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange || optionSelected) {
-                    return; // Ignore small swipes and prevent default behavior if an option was selected
-                }
+                if (disableSlideChange) return;
     
                 if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
@@ -486,14 +421,14 @@
                     // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                    console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
     
-            $window.on('wheel', handleScroll);
+            function handleScroll(event) {
+                event.preventDefault(); // Prevent scroll events from changing slides
+            }
+    
+            $window.on('wheel', handleScroll); // Disable scroll-based slide change
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -506,11 +441,8 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
     
-                    // Prevent all scroll and touch events
-                    disableSlideChange = true;
-                    optionSelected = true; // Set optionSelected to true
-                    document.body.style.overflow = 'hidden'; // Disable scrolling
-                    document.addEventListener('touchmove', preventTouchMove, { passive: false });
+                    disableSlideChange = true; // Prevent any slide change while an option is selected
+                    optionSelected = true;
     
                     event.preventDefault(); // Prevent touch scroll behavior
                     event.stopPropagation(); // Stop the event from bubbling up
@@ -529,19 +461,12 @@
     
                     feedback.style.display = 'block';
     
-                    // Ensure that slide change remains disabled until user finishes viewing feedback
                     setTimeout(() => {
-                        disableSlideChange = false;
-                        optionSelected = false; // Reset optionSelected after a delay
-                        document.body.style.overflow = ''; // Re-enable scrolling
-                        document.removeEventListener('touchmove', preventTouchMove);
-                    }, 1000); // Increase timing to ensure no scroll happens immediately
+                        disableSlideChange = false; // Re-enable slide change after delay
+                        optionSelected = false;
+                    }, 1000);
                 });
             });
-    
-            function preventTouchMove(event) {
-                event.preventDefault(); // Prevent touch scrolling
-            }
     
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
@@ -562,9 +487,12 @@
                     origin: { y: 0.6 }
                 }).then(() => container.removeChild(canvas));
             }
+    
+            document.querySelector('.next-section-button').addEventListener('click', function() {
+                moveToNextSection(); // Proceed to the next section
+            });
         });
     </script>
-
 
     
 </body>
