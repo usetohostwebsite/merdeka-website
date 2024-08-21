@@ -13,58 +13,58 @@
             overflow-x: hidden;
             font-family: Hepta Slab, sans-serif;
             font-weight: 500;
-            background: url('image/background13.png') no-repeat center center fixed; /* Set the background image */
-            background-size: cover; /* Make sure the background image covers the entire page */
+            background: url('image/background13.png') no-repeat center center fixed; 
+            background-size: cover; 
             color: #5D4037;
         }
 
         @media only screen and (max-width: 480px) {
             body, html {
-                background-position: 3% center !important; /* Focus on the left part of the image */
-                background-size: cover; /* Ensure the image covers the screen while focusing on the left */
+                background-position: 3% center !important; 
+                background-size: cover; 
                 background-repeat: no-repeat;
             }
 
             .section img {
                 width: 90%;
                 height: auto;
-                max-height: 50%; /* Adjust image max height for better fit on mobile */
+                max-height: 50%; 
             }
 
             .section p {
-                width: 90%; /* Adjust width of paragraph text */
-                padding: 15px; /* Reduce padding for smaller screens */
-                font-size: 0.8em; /* Adjust font size */
+                width: 90%; 
+                padding: 15px; 
+                font-size: 0.8em; 
             }
 
             .section h2 {
-                font-size: 1.5em; /* Adjust header size */
-                margin-bottom: 15px; /* Reduce margin below header */
+                font-size: 1.5em; 
+                margin-bottom: 15px; 
             }
         }
 
         @media only screen and (max-width: 768px) {
             body, html {
-                background-position: 3% center !important; /* Focus on the left part of the image */
-                background-size: cover; /* Ensure the image covers the screen while focusing on the left */
+                background-position: 3% center !important; 
+                background-size: cover; 
                 background-repeat: no-repeat;
             }
 
             .section img {
                 width: 80%;
                 height: auto;
-                max-height: 60%; /* Adjust image max height for tablets */
+                max-height: 60%; 
             }
 
             .section p {
-                width: 80%; /* Adjust width of paragraph text */
-                padding: 18px; /* Slightly reduce padding */
-                font-size: 0.9em; /* Adjust font size */
+                width: 80%; 
+                padding: 18px; 
+                font-size: 0.9em; 
             }
 
             .section h2 {
-                font-size: 1.75em; /* Adjust header size */
-                margin-bottom: 18px; /* Adjust margin below header */
+                font-size: 1.75em; 
+                margin-bottom: 18px; 
             }
         }
 
@@ -97,8 +97,8 @@
             justify-content: center;
             flex-direction: column;
             opacity: 0;
-            transform: translateX(100%); /* Start off-screen to the right */
-            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out; /* Smoother transition */
+            transform: translateX(100%); 
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out; 
             will-change: transform, opacity;
         }
         .section img {
@@ -129,11 +129,11 @@
         }
 
         .photo-source {
-            font-size: 0.7em; /* Smaller font size for the photo source */
-            color: #555; /* Optional: Change the color to a lighter shade */
-            display: block; /* Optional: Makes the span behave like a block-level element */
-            margin-top: 10px; /* Optional: Adds some space above the photo source */
-            font-style: italic; /* Optional: Italicize the photo source */
+            font-size: 0.7em; 
+            color: #555; 
+            display: block; 
+            margin-top: 10px; 
+            font-style: italic; 
         }
 
         /* Active Section Style */
@@ -225,11 +225,15 @@
         let currentSection = 0;
         const sections = document.querySelectorAll('.section');
         let isThrottled = false;
-
+        let scrollTimeout = null;
+    
+        // Set a threshold for the scroll delta
+        const scrollThreshold = 50; // Adjust this value if necessary
+    
         function showSection(index) {
             sections.forEach((section, i) => {
                 section.classList.remove('active', 'slide-out-left', 'slide-out-right', 'slide-in-left', 'slide-in-right');
-
+    
                 if (i === index) {
                     section.classList.add('active');
                 } else if (i < index) {
@@ -239,62 +243,62 @@
                 }
             });
         }
-
+    
         function handleScroll(event) {
             if (isThrottled) return;
-            isThrottled = true;
-            setTimeout(() => {
+    
+            // Only trigger slide change if the scroll delta is above the threshold
+            if (Math.abs(event.deltaY) < scrollThreshold) return;
+    
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
                 isThrottled = false;
-            }, 1000); // Throttle the scroll event
-
+            }, 1000);
+    
+            isThrottled = true;
+    
             const previousSection = currentSection;
-
+    
             if (event.deltaY > 0 && currentSection < sections.length - 1) {
                 currentSection += 1;
                 console.log('Scrolling down to section', currentSection);
-                showSection(currentSection);
             } else if (event.deltaY < 0 && currentSection > 0) {
                 currentSection -= 1;
                 console.log('Scrolling up to section', currentSection);
-                showSection(currentSection);
-            } else if (event.deltaY > 0 && currentSection === sections.length - 1) {
-                console.log('Scrolling down to next section');
-                window.parent.postMessage('nextSection', '*');
-            } else if (event.deltaY < 0 && currentSection === 0) {
-                console.log('Scrolling up to previous section');
-                window.parent.postMessage('prevSection', '*');
             }
-
+    
             if (previousSection > currentSection) {
                 sections[currentSection].classList.add('slide-in-left');
+            } else if (previousSection < currentSection) {
+                sections[currentSection].classList.add('slide-in-right');
             }
-
+    
             showSection(currentSection);
         }
-
+    
         // Handling touch events for scrolling on mobile devices
         let xDown = null;
         let yDown = null;
-
+    
         function handleTouchStart(evt) {
             const firstTouch = evt.touches[0];
             xDown = firstTouch.clientX;
             yDown = firstTouch.clientY;
         }
-
+    
         function handleTouchMove(evt) {
             if (!xDown || !yDown) {
                 return;
             }
-
+    
             const xUp = evt.touches[0].clientX;
             const yUp = evt.touches[0].clientY;
-
+    
             const xDiff = xDown - xUp;
             const yDiff = yDown - yUp;
-
+    
             const previousSection = currentSection;
-
+    
             if (Math.abs(xDiff) > Math.abs(yDiff)) {
                 // Detect horizontal swipe (optional, not used in this case)
             } else {
@@ -306,15 +310,8 @@
                     // Down swipe (scroll up)
                     currentSection -= 1;
                     console.log('Swiping down to section', currentSection);
-                } else if (yDiff > 0 && currentSection === sections.length - 1) {
-                    console.log('Swiping up to next section');
-                    window.parent.postMessage('nextSection', '*');
-                } else if (yDiff < 0 && currentSection === 0) {
-                    console.log('Swiping down to previous section');
-                    window.parent.postMessage('prevSection', '*');
                 }
-
-                // Ensure correct animation direction
+    
                 if (previousSection > currentSection) {
                     sections[previousSection].classList.add('slide-out-right');
                     sections[currentSection].classList.remove('slide-in-right');
@@ -324,24 +321,24 @@
                     sections[currentSection].classList.remove('slide-in-left');
                     sections[currentSection].classList.add('slide-in-right');
                 }
-
+    
                 showSection(currentSection);
             }
-
+    
             xDown = null;
             yDown = null;
         }
-
+    
         window.onload = () => {
             showSection(currentSection);
         };
-
+    
         window.addEventListener('wheel', handleScroll);
-
+    
         // Add touch event listeners
         window.addEventListener('touchstart', handleTouchStart, false);
         window.addEventListener('touchmove', handleTouchMove, false);
-
+    
         window.addEventListener('message', function(event) {
             console.log('Message received in section2:', event.data);
             if (event.data === 'nextSlide') {
@@ -361,5 +358,6 @@
             }
         });
     </script>
+    
 </body>
 </html>
