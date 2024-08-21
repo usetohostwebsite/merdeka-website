@@ -379,9 +379,9 @@
         var touchStartY = 0;
         var touchEndY = 0;
         var isTouchDevice = 'ontouchstart' in document.documentElement; // Detect touch device
-        
+    
         // Set a threshold for the scroll delta
-        const scrollThreshold = 50; // Increased to ensure it's clearly a swipe
+        const scrollThreshold = 8;
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -496,8 +496,8 @@
                 window.addEventListener('touchstart', handleTouchStart, { passive: false });
                 window.addEventListener('touchmove', handleTouchMove, { passive: false });
                 window.addEventListener('touchend', handleTouchEnd, { passive: false });
-                
-                // Prevent any tap/click events from triggering slide changes
+    
+                // Prevent any click/tap event from triggering slide changes except swipe gestures
                 $slides.on('click', function (event) {
                     event.preventDefault(); // Prevent default click/tap behavior
                     event.stopPropagation(); // Stop the event from propagating
