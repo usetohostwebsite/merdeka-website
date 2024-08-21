@@ -380,7 +380,7 @@
         var touchEndY = 0;
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 8;
+        const scrollThreshold = 30; // Increase the threshold to prevent unintentional scrolls
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -410,7 +410,7 @@
             isThrottled = true;
             setTimeout(() => {
                 isThrottled = false;
-            }, 500); // Adjust timing as needed
+            }, 1000); // Adjust timing as needed, increase to prevent rapid scrolling
         }
     
         $(document).ready(function () {
@@ -435,11 +435,11 @@
                 isThrottled = true;
                 scrollTimeout = setTimeout(() => {
                     isThrottled = false;
-                }, 200);
+                }, 1000); // Increase debounce time to 1 second for more controlled scrolling
     
                 const deltaY = event.originalEvent.deltaY;
     
-                if (Math.abs(deltaY) < scrollThreshold) return;
+                if (Math.abs(deltaY) < scrollThreshold) return; // Prevent small scrolls from triggering slide change
     
                 scrolling = true;
     
@@ -553,6 +553,6 @@
             }
         });
     </script>
- 
+
 </body>
 </html>
