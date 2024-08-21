@@ -462,15 +462,21 @@
 
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
+                // Prevent default behavior on touchstart to avoid unwanted scrolling
+                event.preventDefault();
             }
 
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
+                // Prevent default behavior on touchmove to avoid unwanted scrolling
+                event.preventDefault();
             }
 
             function handleTouchEnd(event) {
+                // Prevent default behavior on touchend to avoid unwanted scrolling
+                event.preventDefault();
+
                 if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange || optionSelected) {
-                    event.preventDefault(); // Prevent any default scrolling behavior
                     return; // Ignore small swipes and prevent default behavior if an option was selected
                 }
 
@@ -490,9 +496,9 @@
             }
 
             $window.on('wheel', handleScroll);
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
+            window.addEventListener('touchstart', handleTouchStart, { passive: false });
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchend', handleTouchEnd, { passive: false });
 
             showSlide(currentIndex);
 
@@ -552,6 +558,7 @@
             }
         });
     </script>
+
     
 </body>
 </html>
