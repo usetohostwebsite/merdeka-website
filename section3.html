@@ -381,7 +381,7 @@
         var touchStartTime = 0; // To track the time of touch start
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 8;
+        const scrollThreshold = 20; // Increased sensitivity for swipe detection
         const tapThreshold = 200; // Maximum time in ms for a tap
     
         // Function to detect if the device is touch-enabled
@@ -493,17 +493,17 @@
                     return; // Ignore small swipes and prevent default behavior if sliding is disabled
                 }
     
-                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+                if (touchStartY - touchEndY > scrollThreshold && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
-                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex > 0) {
                     // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                } else if (touchStartY - touchEndY > scrollThreshold && currentIndex === $slides.length - 1) {
                     console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
