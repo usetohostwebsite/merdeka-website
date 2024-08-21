@@ -372,25 +372,52 @@
     <script>
         var $slides;
         var currentIndex = 0;
-
-        // Function definition moved outside the document.ready block
+        var isThrottled = false;
+        var scrollTimeout = null;
+        var disableSlideChange = false; // Flag to disable slide change temporarily
+        var optionSelected = false; // Flag to track if an option was selected
+        var touchStartY = 0;
+        var touchEndY = 0;
+    
+        // Set a threshold for the scroll delta
+        const scrollThreshold = 10; // Increase this value as needed
+    
         function moveToNextSection() {
+            if (isThrottled || disableSlideChange || optionSelected) return;
+    
             if (currentIndex < $slides.length - 1) {
                 currentIndex += 1;
                 showSlide(currentIndex);
+    
+                // Temporarily disable scroll and touch handling to prevent interference
+                disableSlideChange = true;
+                $(window).off('wheel', handleScroll);
+                window.removeEventListener('touchstart', handleTouchStart);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
+    
+                setTimeout(() => {
+                    disableSlideChange = false;
+                    $(window).on('wheel', handleScroll);
+                    window.addEventListener('touchstart', handleTouchStart, false);
+                    window.addEventListener('touchmove', handleTouchMove, false);
+                    window.addEventListener('touchend', handleTouchEnd, false);
+                }, 1000); // Re-enable after 1 second or adjust as needed
             } else {
                 window.parent.postMessage('nextSection', '*');
             }
+    
+            isThrottled = true;
+            setTimeout(() => {
+                isThrottled = false;
+            }, 500); // Adjust timing as needed
         }
-
+    
         $(document).ready(function () {
             var $window = $(window);
             $slides = $('.slide');
             var scrolling = false;
-            var touchStartY = 0;
-            var touchEndY = 0;
-            var touchStartElement = null; // To store the element where the touch started
-            
+    
             function showSlide(index) {
                 $slides.removeClass('visible out');
                 $slides.eq(index).addClass('visible');
@@ -401,46 +428,54 @@
                     $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
                 }
             }
-            
+    
             function handleScroll(event) {
-                if (scrolling) return;  // Prevents handling scroll when already scrolling
+                if (scrolling || isThrottled || disableSlideChange || optionSelected) return;
+    
+                // Debounce mechanism
+                isThrottled = true;
+                scrollTimeout = setTimeout(() => {
+                    isThrottled = false;
+                }, 500); // Increase the debounce delay as needed
+    
+                const deltaY = event.originalEvent.deltaY;
+    
+                if (Math.abs(deltaY) < scrollThreshold) return;
+    
                 scrolling = true;
-            
-                if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+    
+                if (deltaY > 0 && currentIndex < $slides.length - 1) {
                     // Scroll down (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
-                } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+                } else if (deltaY < 0 && currentIndex > 0) {
                     // Scroll up (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
-                    // Do nothing on scroll down when already at the last slide
+                } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
                     console.log("Scrolling is disabled. Use the button to proceed.");
-                } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
+                } else if (deltaY < 0 && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
-            
+    
                 setTimeout(function() {
                     scrolling = false;
-                }, 500);  // Adjusted debounce time to allow smoother scrolling
+                }, 1000);  // Debounce time to allow smoother scrolling
             }
-            
+    
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
-                touchStartElement = event.target; // Store the element where the touch started
             }
-            
+    
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
             }
-            
-            function handleTouchEnd() {
-                if (touchStartElement.closest('.options')) {
-                    // If the touch started on an option, don't scroll
-                    return;
+    
+            function handleTouchEnd(event) {
+                if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange || optionSelected) {
+                    return; // Ignore small swipes and prevent default behavior if an option was selected
                 }
-            
+    
                 if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
@@ -450,31 +485,36 @@
                     currentIndex -= 1;
                     showSlide(currentIndex);
                 } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                    // Do nothing on swipe up when already at the last slide
                     console.log("Swiping is disabled. Use the button to proceed.");
                 } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
-            
+    
             $window.on('wheel', handleScroll);
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
-            
-            // Initial display
+            window.addEventListener('touchstart', handleTouchStart, { passive: false });
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
             showSlide(currentIndex);
-            
+    
             document.querySelectorAll('.options li').forEach(option => {
-                option.addEventListener('click', () => {
+                option.addEventListener('click', (event) => {
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
-            
+    
+                    // Disable slide change temporarily after selecting an option
+                    disableSlideChange = true;
+                    optionSelected = true; // Set optionSelected to true
+    
+                    event.preventDefault(); // Prevent touch scroll behavior
+                    event.stopPropagation(); // Stop the event from bubbling up
+    
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
                     });
-            
+    
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
                         triggerConfetti();
@@ -482,11 +522,17 @@
                         option.classList.add('incorrect');
                         option.classList.add('shake');
                     }
-            
+    
                     feedback.style.display = 'block';
+    
+                    // Ensure that slide change remains disabled until user finishes viewing feedback
+                    setTimeout(() => {
+                        disableSlideChange = false;
+                        optionSelected = false; // Reset optionSelected after a delay
+                    }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
-            
+    
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
                 let container = document.body;
@@ -498,7 +544,7 @@
                 canvas.style.pointerEvents = "none";
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
-            
+    
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -509,6 +555,5 @@
         });
     </script>
 
-    
 </body>
 </html>
