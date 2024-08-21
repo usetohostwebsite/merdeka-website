@@ -379,30 +379,30 @@
         var touchStartY = 0;
         var touchEndY = 0;
         var touchStartTime = 0; // To track the time of touch start
-    
-        // Set a threshold for the scroll delta
-        const scrollThreshold = 8;
+        
+        // Set thresholds based on device type
+        const scrollThreshold = isTouchDevice() ? 5 : 1; // Higher threshold for touch devices
         const tapThreshold = 200; // Maximum time in ms for a tap
-    
+        
         // Function to detect if the device is touch-enabled
         function isTouchDevice() {
             return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
         }
-    
+        
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
-    
+        
             if (currentIndex < $slides.length - 1) {
                 currentIndex += 1;
                 showSlide(currentIndex);
-    
+        
                 // Temporarily disable scroll and touch handling to prevent interference
                 disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
                 window.removeEventListener('touchstart', handleTouchStart);
                 window.removeEventListener('touchmove', handleTouchMove);
                 window.removeEventListener('touchend', handleTouchEnd);
-    
+        
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
@@ -413,18 +413,18 @@
             } else {
                 window.parent.postMessage('nextSection', '*');
             }
-    
+        
             isThrottled = true;
             setTimeout(() => {
                 isThrottled = false;
             }, 500); // Adjust timing as needed
         }
-    
+        
         $(document).ready(function () {
             var $window = $(window);
             $slides = $('.slide');
             var scrolling = false;
-    
+        
             function showSlide(index) {
                 $slides.removeClass('visible out');
                 $slides.eq(index).addClass('visible');
@@ -435,22 +435,22 @@
                     $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
                 }
             }
-    
+        
             function handleScroll(event) {
                 // Only apply scroll limitation on non-touch devices
                 if (isTouchDevice() || scrolling || isThrottled || disableSlideChange || optionSelected) return;
-    
+        
                 isThrottled = true;
                 scrollTimeout = setTimeout(() => {
                     isThrottled = false;
                 }, 200);
-    
+        
                 const deltaY = event.originalEvent.deltaY;
-    
+        
                 if (Math.abs(deltaY) < scrollThreshold) return;
-    
+        
                 scrolling = true;
-    
+        
                 if (deltaY > 0 && currentIndex < $slides.length - 1) {
                     // Scroll down (next section)
                     currentIndex += 1;
@@ -464,74 +464,74 @@
                 } else if (deltaY < 0 && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
-    
+        
                 setTimeout(function() {
                     scrolling = false;
                 }, 1000);  // Debounce time to allow smoother scrolling
             }
-    
+        
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
                 touchStartTime = new Date().getTime(); // Record the time when the touch starts
             }
-    
+        
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
             }
-    
+        
             function handleTouchEnd(event) {
                 var touchEndTime = new Date().getTime();
                 var touchDuration = touchEndTime - touchStartTime;
-    
+        
                 if (optionSelected) return;  // Block slide changes if an option is selected
-    
+        
                 if (touchDuration < tapThreshold) {
                     return; // If touch is short (a tap), do not process as a swipe
                 }
-    
+        
                 if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange) {
                     return; // Ignore small swipes and prevent default behavior if sliding is disabled
                 }
-    
-                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+        
+                if (touchStartY - touchEndY > scrollThreshold && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
-                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex > 0) {
                     // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                } else if (touchStartY - touchEndY > scrollThreshold && currentIndex === $slides.length - 1) {
                     console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                } else if (touchEndY - touchStartY > scrollThreshold && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
-    
+        
             $window.on('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
+        
             showSlide(currentIndex);
-    
+        
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', (event) => {
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
-    
+        
                     // Disable slide change temporarily after selecting an option
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
-    
+        
                     event.preventDefault(); // Prevent touch scroll behavior
                     event.stopPropagation(); // Stop the event from bubbling up
-    
+        
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
                     });
-    
+        
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
                         triggerConfetti();
@@ -539,9 +539,9 @@
                         option.classList.add('incorrect');
                         option.classList.add('shake');
                     }
-    
+        
                     feedback.style.display = 'block';
-    
+        
                     // Ensure that slide change remains disabled until user finishes viewing feedback
                     setTimeout(() => {
                         disableSlideChange = false;
@@ -549,7 +549,7 @@
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
-    
+        
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
                 let container = document.body;
@@ -561,7 +561,7 @@
                 canvas.style.pointerEvents = "none";
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
-    
+        
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -571,7 +571,6 @@
             }
         });
     </script>
-
 
 </body>
 </html>
