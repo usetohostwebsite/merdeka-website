@@ -381,8 +381,9 @@
         var touchStartTime = 0; // To track the time of touch start
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 5; // Reduced threshold for more responsive swipe detection
+        const scrollThreshold = 5; // Threshold for swipe detection
         const tapThreshold = 200; // Maximum time in ms for a tap
+        const tapDistanceThreshold = 10; // Maximum distance in pixels for a tap
     
         // Function to detect if the device is touch-enabled
         function isTouchDevice() {
@@ -486,10 +487,12 @@
     
                 if (optionSelected) return;  // Block slide changes if an option is selected
     
-                if (touchDuration < tapThreshold && touchDistance < scrollThreshold) {
-                    return; // If touch is short (a tap) and distance is small, do not process as a swipe
+                // Detect a tap: short duration and small movement
+                if (touchDuration < tapThreshold && touchDistance < tapDistanceThreshold) {
+                    return; // This was a tap, so do not process as a swipe
                 }
     
+                // Detect a swipe
                 if (touchDistance >= scrollThreshold && !disableSlideChange) {
                     if (touchStartY - touchEndY > 0 && currentIndex < $slides.length - 1) {
                         // Swipe up (next section)
@@ -570,7 +573,6 @@
             }
         });
     </script>
-
 
 </body>
 </html>
