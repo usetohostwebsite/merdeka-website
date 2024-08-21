@@ -427,6 +427,7 @@
                 window.parent.postMessage('prevSection', '*');
             }
     
+            // After a slide transition, ignore any further wheel events for a short period to prevent multiple slides from being skipped
             setTimeout(function() {
                 scrolling = false;
             }, scrollDelay);
@@ -524,7 +525,6 @@
             }
         });
     </script>
-
 
 </body>
 </html>
