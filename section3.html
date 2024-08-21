@@ -372,9 +372,9 @@
     <script>
         var $slides;
         var currentIndex = 0;
-        var scrolling = false;
         var lastScrollTime = 0;
-        const scrollDelay = 1000; // Delay for non-touch devices
+        const scrollDelay = 1000; // Delay in milliseconds to throttle scroll events
+        const scrollThreshold = 50; // Minimum scroll distance to trigger a slide change
     
         // Function to check if the device is a touch device
         function isTouchDevice() {
@@ -409,34 +409,24 @@
     
             const currentTime = new Date().getTime();
     
-            // Prevent multiple scrolls within the specified delay time
-            if (scrolling || (currentTime - lastScrollTime) < scrollDelay) return;
+            if ((currentTime - lastScrollTime) < scrollDelay) return;
     
-            scrolling = true;
             lastScrollTime = currentTime;
     
-            if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+            const deltaY = event.originalEvent.deltaY;
+    
+            if (deltaY > scrollThreshold && currentIndex < $slides.length - 1) {
                 currentIndex += 1;
                 showSlide(currentIndex);
-            } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+            } else if (deltaY < -scrollThreshold && currentIndex > 0) {
                 currentIndex -= 1;
                 showSlide(currentIndex);
-            } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
-                console.log("Scrolling is disabled. Use the button to proceed.");
-            } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
-                window.parent.postMessage('prevSection', '*');
             }
-    
-            // After a slide transition, ignore any further wheel events for a short period to prevent multiple slides from being skipped
-            setTimeout(function() {
-                scrolling = false;
-            }, scrollDelay);
         }
     
         // Handle touch start events
         function handleTouchStart(event) {
             touchStartY = event.touches[0].clientY;
-            touchStartElement = event.target;
         }
     
         // Handle touch move events
@@ -446,20 +436,14 @@
     
         // Handle touch end events
         function handleTouchEnd() {
-            if (touchStartElement.closest('.options')) {
-                return; // Prevent scroll if the touch started on an option
-            }
-    
-            if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
-                currentIndex += 1;
-                showSlide(currentIndex);
-            } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
-                currentIndex -= 1;
-                showSlide(currentIndex);
-            } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                console.log("Swiping is disabled. Use the button to proceed.");
-            } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
-                window.parent.postMessage('prevSection', '*');
+            if (Math.abs(touchStartY - touchEndY) > scrollThreshold) {
+                if (touchStartY > touchEndY && currentIndex < $slides.length - 1) {
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else if (touchStartY < touchEndY && currentIndex > 0) {
+                    currentIndex -= 1;
+                    showSlide(currentIndex);
+                }
             }
         }
     
@@ -468,7 +452,6 @@
             $slides = $('.slide');
             var touchStartY = 0;
             var touchEndY = 0;
-            var touchStartElement = null;
     
             // Apply scroll event only for non-touch devices
             if (!isTouchDevice()) {
@@ -525,6 +508,7 @@
             }
         });
     </script>
+
 
 </body>
 </html>
