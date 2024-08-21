@@ -378,9 +378,11 @@
         var optionSelected = false; // Flag to track if an option was selected
         var touchStartY = 0;
         var touchEndY = 0;
+        var touchStartTime = 0; // To track the time of touch start
     
         // Set a threshold for the scroll delta
         const scrollThreshold = 8;
+        const tapThreshold = 200; // Maximum time in ms for a tap
     
         // Function to detect if the device is touch-enabled
         function isTouchDevice() {
@@ -470,6 +472,7 @@
     
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
+                touchStartTime = new Date().getTime(); // Record the time when the touch starts
             }
     
             function handleTouchMove(event) {
@@ -477,7 +480,14 @@
             }
     
             function handleTouchEnd(event) {
+                var touchEndTime = new Date().getTime();
+                var touchDuration = touchEndTime - touchStartTime;
+    
                 if (optionSelected) return;  // Block slide changes if an option is selected
+    
+                if (touchDuration < tapThreshold) {
+                    return; // If touch is short (a tap), do not process as a swipe
+                }
     
                 if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange) {
                     return; // Ignore small swipes and prevent default behavior if sliding is disabled
