@@ -369,152 +369,174 @@
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-    <script>
-        var $slides;
-        var currentIndex = 0;
-        var isThrottled = false;
-        var scrollTimeout = null;
-    
-        // Set a threshold for the scroll delta
-        const scrollThreshold = 8; 
-    
-        function moveToNextSection() {
-            if (currentIndex < $slides.length - 1) {
-                currentIndex += 1;
-                showSlide(currentIndex);
-            } else {
-                window.parent.postMessage('nextSection', '*');
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<script>
+    var $slides;
+    var currentIndex = 0;
+    var isThrottled = false;
+    var scrollTimeout = null;
+
+    // Set a threshold for the scroll delta
+    const scrollThreshold = 8; 
+
+    function moveToNextSection() {
+        if (isThrottled) return;
+
+        if (currentIndex < $slides.length - 1) {
+            currentIndex += 1;
+            showSlide(currentIndex);
+
+            // Temporarily disable scroll and touch handling to prevent interference
+            $(window).off('wheel', handleScroll);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+
+            setTimeout(() => {
+                $(window).on('wheel', handleScroll);
+                window.addEventListener('touchstart', handleTouchStart, false);
+                window.addEventListener('touchmove', handleTouchMove, false);
+                window.addEventListener('touchend', handleTouchEnd, false);
+            }, 1000); // Re-enable after 1 second or adjust as needed
+        } else {
+            window.parent.postMessage('nextSection', '*');
+        }
+
+        isThrottled = true;
+        setTimeout(() => {
+            isThrottled = false;
+        }, 500); // Adjust timing as needed
+    }
+
+    $(document).ready(function () {
+        var $window = $(window);
+        $slides = $('.slide');
+        var scrolling = false;
+        var touchStartY = 0;
+        var touchEndY = 0;
+
+        function showSlide(index) {
+            $slides.removeClass('visible out');
+            $slides.eq(index).addClass('visible');
+            if (index > 0) {
+                $slides.eq(index - 1).addClass('out');
+            }
+            if (index < $slides.length - 1) {
+                $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
             }
         }
-    
-        $(document).ready(function () {
-            var $window = $(window);
-            $slides = $('.slide');
-            var scrolling = false;
-            var touchStartY = 0;
-            var touchEndY = 0;
-    
-            function showSlide(index) {
-                $slides.removeClass('visible out');
-                $slides.eq(index).addClass('visible');
-                if (index > 0) {
-                    $slides.eq(index - 1).addClass('out');
-                }
-                if (index < $slides.length - 1) {
-                    $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
-                }
+
+        function handleScroll(event) {
+            if (scrolling || isThrottled) return;
+
+            isThrottled = true;
+            scrollTimeout = setTimeout(() => {
+                isThrottled = false;
+            }, 200);
+
+            const deltaY = event.originalEvent.deltaY;
+
+            if (Math.abs(deltaY) < scrollThreshold) return;
+
+            scrolling = true;
+
+            if (deltaY > 0 && currentIndex < $slides.length - 1) {
+                // Scroll down (next section)
+                currentIndex += 1;
+                showSlide(currentIndex);
+            } else if (deltaY < 0 && currentIndex > 0) {
+                // Scroll up (previous section)
+                currentIndex -= 1;
+                showSlide(currentIndex);
+            } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
+                console.log("Scrolling is disabled. Use the button to proceed.");
+            } else if (deltaY < 0 && currentIndex === 0) {
+                window.parent.postMessage('prevSection', '*'); // Go back to section2
             }
-    
-            function handleScroll(event) {
-                if (scrolling || isThrottled) return;
-    
-                isThrottled = true;
-                scrollTimeout = setTimeout(() => {
-                    isThrottled = false;
-                }, 200);
-    
-                const deltaY = event.originalEvent.deltaY;
-    
-                if (Math.abs(deltaY) < scrollThreshold) return;
-    
-                scrolling = true;
-    
-                if (deltaY > 0 && currentIndex < $slides.length - 1) {
-                    // Scroll down (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (deltaY < 0 && currentIndex > 0) {
-                    // Scroll up (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
-                    console.log("Scrolling is disabled. Use the button to proceed.");
-                } else if (deltaY < 0 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
-                }
-    
-                setTimeout(function() {
-                    scrolling = false;
-                }, 1000);  // Debounce time to allow smoother scrolling
+
+            setTimeout(function() {
+                scrolling = false;
+            }, 1000);  // Debounce time to allow smoother scrolling
+        }
+
+        function handleTouchStart(event) {
+            touchStartY = event.touches[0].clientY;
+        }
+
+        function handleTouchMove(event) {
+            touchEndY = event.touches[0].clientY;
+        }
+
+        function handleTouchEnd() {
+            if (Math.abs(touchStartY - touchEndY) < scrollThreshold) return; // Ignore small swipes
+
+            if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+                // Swipe up (next section)
+                currentIndex += 1;
+                showSlide(currentIndex);
+            } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                // Swipe down (previous section)
+                currentIndex -= 1;
+                showSlide(currentIndex);
+            } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                console.log("Swiping is disabled. Use the button to proceed.");
+            } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                window.parent.postMessage('prevSection', '*'); // Go back to section2
             }
-    
-            function handleTouchStart(event) {
-                touchStartY = event.touches[0].clientY;
-            }
-    
-            function handleTouchMove(event) {
-                touchEndY = event.touches[0].clientY;
-            }
-    
-            function handleTouchEnd() {
-                if (Math.abs(touchStartY - touchEndY) < scrollThreshold) return; // Ignore small swipes
-    
-                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
-                    // Swipe up (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
-                    // Swipe down (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                    console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
-                }
-            }
-    
-            $window.on('wheel', handleScroll);
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
-    
-            showSlide(currentIndex);
-    
-            document.querySelectorAll('.options li').forEach(option => {
-                option.addEventListener('click', () => {
-                    const questionContainer = option.closest('.question-container');
-                    const allOptions = questionContainer.querySelectorAll('.options li');
-                    const feedback = questionContainer.querySelector('.feedback');
-    
-                    allOptions.forEach(opt => {
-                        opt.style.pointerEvents = 'none'; // Disable further clicks
-                    });
-    
-                    if (option.getAttribute('data-correct') === 'true') {
-                        option.classList.add('correct');
-                        triggerConfetti();
-                    } else {
-                        option.classList.add('incorrect');
-                        option.classList.add('shake');
-                    }
-    
-                    feedback.style.display = 'block';
+        }
+
+        $window.on('wheel', handleScroll);
+        window.addEventListener('touchstart', handleTouchStart, false);
+        window.addEventListener('touchmove', handleTouchMove, false);
+        window.addEventListener('touchend', handleTouchEnd, false);
+
+        showSlide(currentIndex);
+
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', () => {
+                const questionContainer = option.closest('.question-container');
+                const allOptions = questionContainer.querySelectorAll('.options li');
+                const feedback = questionContainer.querySelector('.feedback');
+
+                allOptions.forEach(opt => {
+                    opt.style.pointerEvents = 'none'; // Disable further clicks
                 });
+
+                if (option.getAttribute('data-correct') === 'true') {
+                    option.classList.add('correct');
+                    triggerConfetti();
+                } else {
+                    option.classList.add('incorrect');
+                    option.classList.add('shake');
+                }
+
+                feedback.style.display = 'block';
             });
-    
-            function triggerConfetti() {
-                let canvas = document.createElement("canvas");
-                let container = document.body;
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                canvas.style.position = "fixed";
-                canvas.style.top = "0";
-                canvas.style.left = "0";
-                canvas.style.pointerEvents = "none";
-                canvas.style.zIndex = "10000";
-                container.appendChild(canvas);
-    
-                let confettiButton = confetti.create(canvas);
-                confettiButton({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                }).then(() => container.removeChild(canvas));
-            }
         });
-    </script>
-    
+
+        function triggerConfetti() {
+            let canvas = document.createElement("canvas");
+            let container = document.body;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.style.position = "fixed";
+            canvas.style.top = "0";
+            canvas.style.left = "0";
+            canvas.style.pointerEvents = "none";
+            canvas.style.zIndex = "10000";
+            container.appendChild(canvas);
+
+            let confettiButton = confetti.create(canvas);
+            confettiButton({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            }).then(() => container.removeChild(canvas));
+        }
+    });
+</script>
+
 
     
 </body>
