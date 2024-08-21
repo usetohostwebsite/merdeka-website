@@ -497,8 +497,8 @@
                 window.addEventListener('touchmove', handleTouchMove, { passive: false });
                 window.addEventListener('touchend', handleTouchEnd, { passive: false });
                 
-                // Prevent any click/tap event from triggering slide changes
-                $slides.on('click touchstart touchend', function (event) {
+                // Prevent any click/tap event from triggering slide changes except swipe gestures
+                $slides.on('click', function (event) {
                     event.preventDefault(); // Prevent default click/tap behavior
                     event.stopPropagation(); // Stop the event from propagating
                 });
