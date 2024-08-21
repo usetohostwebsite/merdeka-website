@@ -380,7 +380,7 @@
         var touchEndY = 0;
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 30; // Adjust for two-finger scrolling
+        const scrollThreshold = 10; // Adjust for two-finger scrolling
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -430,8 +430,8 @@
             }
     
             function handleScroll(event) {
-                // Check if input is from a touchpad
-                if (event.originalEvent.pointerType === 'touch' || scrolling || isThrottled || disableSlideChange || optionSelected) return;
+                // Handle only wheel events, which are typical of touchpad scrolling
+                if (scrolling || isThrottled || disableSlideChange || optionSelected || event.type !== 'wheel') return;
     
                 // Debounce mechanism
                 isThrottled = true;
@@ -492,7 +492,9 @@
                 }
             }
     
+            // Attach wheel event for touchpad scrolling
             $window.on('wheel', handleScroll);
+            // Attach touch events for touch screen devices
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
