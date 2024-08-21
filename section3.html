@@ -496,11 +496,11 @@
                 window.addEventListener('touchstart', handleTouchStart, { passive: false });
                 window.addEventListener('touchmove', handleTouchMove, { passive: false });
                 window.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
-                // Prevent tap/click events from triggering slide changes
-                $slides.on('click', function (event) {
-                    event.preventDefault(); // Prevent default click behavior
-                    event.stopPropagation(); // Stop the click event from propagating
+                
+                // Prevent any click/tap event from triggering slide changes
+                $slides.on('click touchstart touchend', function (event) {
+                    event.preventDefault(); // Prevent default click/tap behavior
+                    event.stopPropagation(); // Stop the event from propagating
                 });
             } else {
                 // Use normal mouse scrolling for non-touch devices
