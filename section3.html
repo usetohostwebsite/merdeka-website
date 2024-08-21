@@ -380,8 +380,8 @@
         var touchEndY = 0;
         var isTouchDevice = 'ontouchstart' in document.documentElement; // Detect touch device
         
-        // Set a threshold for the scroll delta
-        const scrollThreshold = 50;
+        // Set a threshold for the swipe delta
+        const swipeThreshold = 50;
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -400,9 +400,9 @@
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
-                    window.addEventListener('touchstart', handleTouchStart, false);
-                    window.addEventListener('touchmove', handleTouchMove, false);
-                    window.addEventListener('touchend', handleTouchEnd, false);
+                    window.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    window.addEventListener('touchend', handleTouchEnd, { passive: false });
                 }, 1000); // Re-enable after 1 second or adjust as needed
             } else {
                 window.parent.postMessage('nextSection', '*');
@@ -440,7 +440,7 @@
     
                 const deltaY = event.originalEvent.deltaY;
     
-                if (Math.abs(deltaY) < scrollThreshold) return;
+                if (Math.abs(deltaY) < swipeThreshold) return;
     
                 scrolling = true;
     
@@ -465,28 +465,30 @@
     
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
+                event.preventDefault(); // Prevent default touch behavior
             }
     
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
+                event.preventDefault(); // Prevent default touch behavior
             }
     
             function handleTouchEnd(event) {
-                if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange || optionSelected) {
+                if (Math.abs(touchStartY - touchEndY) < swipeThreshold || disableSlideChange || optionSelected) {
                     return; // Ignore small swipes and prevent default behavior if an option was selected
                 }
     
-                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+                if (touchStartY - touchEndY > swipeThreshold && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
                     showSlide(currentIndex);
-                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                } else if (touchEndY - touchStartY > swipeThreshold && currentIndex > 0) {
                     // Swipe down (previous section)
                     currentIndex -= 1;
                     showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                } else if (touchStartY - touchEndY > swipeThreshold && currentIndex === $slides.length - 1) {
                     console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                } else if (touchEndY - touchStartY > swipeThreshold && currentIndex === 0) {
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
