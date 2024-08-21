@@ -374,7 +374,8 @@
         var currentIndex = 0;
         var scrolling = false;
         var lastScrollTime = 0;
-        const scrollDelay = 1700; // Delay for non-touch devices
+        const scrollDelay = 2000; // Delay for non-touch devices
+        const scrollThreshold = 30; // Minimum deltaY threshold for scroll to count (non-touch devices)
     
         // Function to check if the device is a touch device
         function isTouchDevice() {
@@ -408,22 +409,23 @@
             if (isTouchDevice()) return; // Skip scroll handling on touch devices
     
             const currentTime = new Date().getTime();
+            const deltaY = event.originalEvent.deltaY;
     
-            // Prevent multiple scrolls within the specified delay time
-            if (scrolling || (currentTime - lastScrollTime) < scrollDelay) return;
+            // Prevent multiple scrolls within the specified delay time and check the deltaY threshold
+            if (scrolling || (currentTime - lastScrollTime) < scrollDelay || Math.abs(deltaY) < scrollThreshold) return;
     
             scrolling = true;
             lastScrollTime = currentTime;
     
-            if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+            if (deltaY > 0 && currentIndex < $slides.length - 1) {
                 currentIndex += 1;
                 showSlide(currentIndex);
-            } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+            } else if (deltaY < 0 && currentIndex > 0) {
                 currentIndex -= 1;
                 showSlide(currentIndex);
-            } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
+            } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
                 console.log("Scrolling is disabled. Use the button to proceed.");
-            } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
+            } else if (deltaY < 0 && currentIndex === 0) {
                 window.parent.postMessage('prevSection', '*');
             }
     
