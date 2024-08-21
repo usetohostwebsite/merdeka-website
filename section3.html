@@ -378,24 +378,24 @@
         var optionSelected = false; // Flag to track if an option was selected
         var touchStartY = 0;
         var touchEndY = 0;
-    
+
         // Set a threshold for the scroll delta
-        const scrollThreshold = 8;
-    
+        const scrollThreshold = 15;
+
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
-    
+
             if (currentIndex < $slides.length - 1) {
                 currentIndex += 1;
                 showSlide(currentIndex);
-    
+
                 // Temporarily disable scroll and touch handling to prevent interference
                 disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
                 window.removeEventListener('touchstart', handleTouchStart);
                 window.removeEventListener('touchmove', handleTouchMove);
                 window.removeEventListener('touchend', handleTouchEnd);
-    
+
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
@@ -406,18 +406,18 @@
             } else {
                 window.parent.postMessage('nextSection', '*');
             }
-    
+
             isThrottled = true;
             setTimeout(() => {
                 isThrottled = false;
             }, 500); // Adjust timing as needed
         }
-    
+
         $(document).ready(function () {
             var $window = $(window);
             $slides = $('.slide');
             var scrolling = false;
-    
+
             function showSlide(index) {
                 $slides.removeClass('visible out');
                 $slides.eq(index).addClass('visible');
@@ -428,54 +428,53 @@
                     $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
                 }
             }
-    
+
             function handleScroll(event) {
-                // Check if the event is from a touchpad
-                if (event.originalEvent.deltaMode === 0 && !scrolling && !isThrottled && !disableSlideChange && !optionSelected) {
-                    isThrottled = true;
-                    scrollTimeout = setTimeout(() => {
-                        isThrottled = false;
-                    }, 200);
-    
-                    const deltaY = event.originalEvent.deltaY;
-    
-                    if (Math.abs(deltaY) < scrollThreshold) return;
-    
-                    scrolling = true;
-    
-                    if (deltaY > 0 && currentIndex < $slides.length - 1) {
-                        // Scroll down (next section)
-                        currentIndex += 1;
-                        showSlide(currentIndex);
-                    } else if (deltaY < 0 && currentIndex > 0) {
-                        // Scroll up (previous section)
-                        currentIndex -= 1;
-                        showSlide(currentIndex);
-                    } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
-                        console.log("Scrolling is disabled. Use the button to proceed.");
-                    } else if (deltaY < 0 && currentIndex === 0) {
-                        window.parent.postMessage('prevSection', '*'); // Go back to section2
-                    }
-    
-                    setTimeout(function() {
-                        scrolling = false;
-                    }, 1000);  // Debounce time to allow smoother scrolling
+                if (scrolling || isThrottled || disableSlideChange || optionSelected) return;
+
+                isThrottled = true;
+                scrollTimeout = setTimeout(() => {
+                    isThrottled = false;
+                }, 200);
+
+                const deltaY = event.originalEvent.deltaY;
+
+                if (Math.abs(deltaY) < scrollThreshold) return;
+
+                scrolling = true;
+
+                if (deltaY > 0 && currentIndex < $slides.length - 1) {
+                    // Scroll down (next section)
+                    currentIndex += 1;
+                    showSlide(currentIndex);
+                } else if (deltaY < 0 && currentIndex > 0) {
+                    // Scroll up (previous section)
+                    currentIndex -= 1;
+                    showSlide(currentIndex);
+                } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
+                    console.log("Scrolling is disabled. Use the button to proceed.");
+                } else if (deltaY < 0 && currentIndex === 0) {
+                    window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
+
+                setTimeout(function() {
+                    scrolling = false;
+                }, 1000);  // Debounce time to allow smoother scrolling
             }
-    
+
             function handleTouchStart(event) {
                 touchStartY = event.touches[0].clientY;
             }
-    
+
             function handleTouchMove(event) {
                 touchEndY = event.touches[0].clientY;
             }
-    
+
             function handleTouchEnd(event) {
                 if (Math.abs(touchStartY - touchEndY) < scrollThreshold || disableSlideChange || optionSelected) {
                     return; // Ignore small swipes and prevent default behavior if an option was selected
                 }
-    
+
                 if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
@@ -490,31 +489,31 @@
                     window.parent.postMessage('prevSection', '*'); // Go back to section2
                 }
             }
-    
+
             $window.on('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
+
             showSlide(currentIndex);
-    
+
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', (event) => {
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
-    
+
                     // Disable slide change temporarily after selecting an option
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
-    
+
                     event.preventDefault(); // Prevent touch scroll behavior
                     event.stopPropagation(); // Stop the event from bubbling up
-    
+
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
                     });
-    
+
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
                         triggerConfetti();
@@ -522,9 +521,9 @@
                         option.classList.add('incorrect');
                         option.classList.add('shake');
                     }
-    
+
                     feedback.style.display = 'block';
-    
+
                     // Ensure that slide change remains disabled until user finishes viewing feedback
                     setTimeout(() => {
                         disableSlideChange = false;
@@ -532,7 +531,7 @@
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
-    
+
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
                 let container = document.body;
@@ -544,7 +543,7 @@
                 canvas.style.pointerEvents = "none";
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
-    
+
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -555,5 +554,6 @@
         });
     </script>
 
+    
 </body>
 </html>
