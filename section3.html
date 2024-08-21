@@ -379,7 +379,7 @@
         var touchStartY = 0;
         var touchEndY = 0;
         var isTouchDevice = 'ontouchstart' in document.documentElement; // Detect touch device
-    
+        
         // Set a threshold for the scroll delta
         const scrollThreshold = 8;
     
@@ -497,7 +497,7 @@
                 window.addEventListener('touchmove', handleTouchMove, { passive: false });
                 window.addEventListener('touchend', handleTouchEnd, { passive: false });
     
-                // Prevent any click event from triggering slide changes on touch devices
+                // Prevent tap/click events from triggering slide changes
                 $slides.on('click', function (event) {
                     event.preventDefault(); // Prevent default click behavior
                     event.stopPropagation(); // Stop the click event from propagating
