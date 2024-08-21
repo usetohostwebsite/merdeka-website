@@ -376,6 +376,8 @@
         var scrollTimeout = null;
         var disableSlideChange = false; // Flag to disable slide change temporarily
         var optionSelected = false; // Flag to track if an option was selected
+        var touchStartY = 0;
+        var touchEndY = 0;
 
         // Set a threshold for the scroll delta
         const scrollThreshold = 8;
@@ -388,12 +390,14 @@
                 showSlide(currentIndex);
 
                 // Temporarily disable scroll and touch handling to prevent interference
+                disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
                 window.removeEventListener('touchstart', handleTouchStart);
                 window.removeEventListener('touchmove', handleTouchMove);
                 window.removeEventListener('touchend', handleTouchEnd);
 
                 setTimeout(() => {
+                    disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
                     window.addEventListener('touchstart', handleTouchStart, false);
                     window.addEventListener('touchmove', handleTouchMove, false);
@@ -413,8 +417,6 @@
             var $window = $(window);
             $slides = $('.slide');
             var scrolling = false;
-            var touchStartY = 0;
-            var touchEndY = 0;
 
             function showSlide(index) {
                 $slides.removeClass('visible out');
@@ -522,11 +524,11 @@
 
                     feedback.style.display = 'block';
 
-                    // Re-enable slide change after a short delay
+                    // Ensure that slide change remains disabled until user finishes viewing feedback
                     setTimeout(() => {
                         disableSlideChange = false;
                         optionSelected = false; // Reset optionSelected after a delay
-                    }, 2000); // Adjust timing as needed (set longer delay to ensure no scroll happens immediately)
+                    }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
 
@@ -551,7 +553,6 @@
             }
         });
     </script>
-
 
     
 </body>
