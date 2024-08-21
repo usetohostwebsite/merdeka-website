@@ -374,11 +374,11 @@
         var currentIndex = 0;
         var isThrottled = false;
         var scrollTimeout = null;
-        var disableSlideChange = false; // New flag to disable slide change temporarily
-        var optionSelected = false; // New flag to track if an option was selected
+        var disableSlideChange = false; // Flag to disable slide change temporarily
+        var optionSelected = false; // Flag to track if an option was selected
 
         // Set a threshold for the scroll delta
-        const scrollThreshold = 8; 
+        const scrollThreshold = 8;
 
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -497,7 +497,7 @@
             showSlide(currentIndex);
 
             document.querySelectorAll('.options li').forEach(option => {
-                option.addEventListener('click', () => {
+                option.addEventListener('click', (event) => {
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
@@ -505,6 +505,9 @@
                     // Disable slide change temporarily after selecting an option
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
+
+                    event.preventDefault(); // Prevent touch scroll behavior
+                    event.stopPropagation(); // Stop the event from bubbling up
 
                     allOptions.forEach(opt => {
                         opt.style.pointerEvents = 'none'; // Disable further clicks
@@ -549,7 +552,6 @@
             }
         });
     </script>
-
     
 </body>
 </html>
