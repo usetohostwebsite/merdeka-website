@@ -380,7 +380,8 @@
         var touchEndY = 0;
     
         // Set a threshold for the scroll delta
-        const scrollThreshold = 10; // Adjust for two-finger scrolling
+        const scrollThreshold = 8;
+        var lastScrollTime = 0; // To track the last scroll time
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -430,14 +431,12 @@
             }
     
             function handleScroll(event) {
-                // Handle only wheel events, which are typical of touchpad scrolling
-                if (scrolling || isThrottled || disableSlideChange || optionSelected || event.type !== 'wheel') return;
+                if (scrolling || isThrottled || disableSlideChange || optionSelected) return;
     
-                // Debounce mechanism
-                isThrottled = true;
-                scrollTimeout = setTimeout(() => {
-                    isThrottled = false;
-                }, 500); // Increase the debounce delay as needed
+                // Throttle the scroll event
+                var now = new Date().getTime();
+                if (now - lastScrollTime < 1000) return; // 1 second delay between scrolls
+                lastScrollTime = now;
     
                 const deltaY = event.originalEvent.deltaY;
     
@@ -492,9 +491,7 @@
                 }
             }
     
-            // Attach wheel event for touchpad scrolling
             $window.on('wheel', handleScroll);
-            // Attach touch events for touch screen devices
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
