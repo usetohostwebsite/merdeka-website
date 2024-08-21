@@ -506,10 +506,11 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
     
-                    // Prevent touch events and scroll during option selection
+                    // Prevent all scroll and touch events
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
                     document.body.style.overflow = 'hidden'; // Disable scrolling
+                    document.addEventListener('touchmove', preventTouchMove, { passive: false });
     
                     event.preventDefault(); // Prevent touch scroll behavior
                     event.stopPropagation(); // Stop the event from bubbling up
@@ -533,9 +534,14 @@
                         disableSlideChange = false;
                         optionSelected = false; // Reset optionSelected after a delay
                         document.body.style.overflow = ''; // Re-enable scrolling
+                        document.removeEventListener('touchmove', preventTouchMove);
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
+    
+            function preventTouchMove(event) {
+                event.preventDefault(); // Prevent touch scrolling
+            }
     
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
@@ -558,6 +564,7 @@
             }
         });
     </script>
+
 
     
 </body>
