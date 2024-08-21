@@ -372,10 +372,16 @@
     <script>
         var $slides;
         var currentIndex = 0;
-        var scrolling = false;  // Variable to prevent multiple scrolls
-        var lastScrollTime = 0; // Variable to track the last scroll time
+        var scrolling = false;
+        var lastScrollTime = 0;
+        const scrollDelay = 1000; // Delay for non-touch devices
     
-        // Function definition moved outside the document.ready block
+        // Function to check if the device is a touch device
+        function isTouchDevice() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+        }
+    
+        // Function to move to the next section
         function moveToNextSection() {
             if (currentIndex < $slides.length - 1) {
                 currentIndex += 1;
@@ -385,102 +391,106 @@
             }
         }
     
+        // Show the slide based on index
+        function showSlide(index) {
+            $slides.removeClass('visible out');
+            $slides.eq(index).addClass('visible');
+            if (index > 0) {
+                $slides.eq(index - 1).addClass('out');
+            }
+            if (index < $slides.length - 1) {
+                $slides.eq(index + 1).removeClass('out');
+            }
+        }
+    
+        // Handle scroll events for non-touch devices only
+        function handleScroll(event) {
+            if (isTouchDevice()) return; // Skip scroll handling on touch devices
+    
+            const currentTime = new Date().getTime();
+    
+            // Prevent multiple scrolls within the specified delay time
+            if (scrolling || (currentTime - lastScrollTime) < scrollDelay) return;
+    
+            scrolling = true;
+            lastScrollTime = currentTime;
+    
+            if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
+                currentIndex += 1;
+                showSlide(currentIndex);
+            } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
+                currentIndex -= 1;
+                showSlide(currentIndex);
+            } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
+                console.log("Scrolling is disabled. Use the button to proceed.");
+            } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
+                window.parent.postMessage('prevSection', '*');
+            }
+    
+            setTimeout(function() {
+                scrolling = false;
+            }, scrollDelay);
+        }
+    
+        // Handle touch start events
+        function handleTouchStart(event) {
+            touchStartY = event.touches[0].clientY;
+            touchStartElement = event.target;
+        }
+    
+        // Handle touch move events
+        function handleTouchMove(event) {
+            touchEndY = event.touches[0].clientY;
+        }
+    
+        // Handle touch end events
+        function handleTouchEnd() {
+            if (touchStartElement.closest('.options')) {
+                return; // Prevent scroll if the touch started on an option
+            }
+    
+            if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
+                currentIndex += 1;
+                showSlide(currentIndex);
+            } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
+                currentIndex -= 1;
+                showSlide(currentIndex);
+            } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
+                console.log("Swiping is disabled. Use the button to proceed.");
+            } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
+                window.parent.postMessage('prevSection', '*');
+            }
+        }
+    
         $(document).ready(function () {
             var $window = $(window);
             $slides = $('.slide');
             var touchStartY = 0;
             var touchEndY = 0;
-            var touchStartElement = null; // To store the element where the touch started
-            const scrollDelay = 1800; // Delay in milliseconds between allowed scrolls
-            
-            function showSlide(index) {
-                $slides.removeClass('visible out');
-                $slides.eq(index).addClass('visible');
-                if (index > 0) {
-                    $slides.eq(index - 1).addClass('out');
-                }
-                if (index < $slides.length - 1) {
-                    $slides.eq(index + 1).removeClass('out'); // Ensure next slide is reset when scrolling back
-                }
+            var touchStartElement = null;
+    
+            // Apply scroll event only for non-touch devices
+            if (!isTouchDevice()) {
+                $window.on('wheel', handleScroll);
             }
     
-            function handleScroll(event) {
-                const currentTime = new Date().getTime();
-    
-                // Prevent multiple scrolls within a short time frame
-                if (scrolling || (currentTime - lastScrollTime) < scrollDelay) return;
-                scrolling = true;
-                lastScrollTime = currentTime;
-    
-                if (event.originalEvent.deltaY > 0 && currentIndex < $slides.length - 1) {
-                    // Scroll down (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (event.originalEvent.deltaY < 0 && currentIndex > 0) {
-                    // Scroll up (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (event.originalEvent.deltaY > 0 && currentIndex === $slides.length - 1) {
-                    // Do nothing on scroll down when already at the last slide
-                    console.log("Scrolling is disabled. Use the button to proceed.");
-                } else if (event.originalEvent.deltaY < 0 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
-                }
-    
-                setTimeout(function() {
-                    scrolling = false; // Reset scrolling after a delay to allow the next scroll
-                }, scrollDelay);  // Adjust debounce time to allow smoother scrolling
-            }
-            
-            function handleTouchStart(event) {
-                touchStartY = event.touches[0].clientY;
-                touchStartElement = event.target; // Store the element where the touch started
-            }
-            
-            function handleTouchMove(event) {
-                touchEndY = event.touches[0].clientY;
-            }
-            
-            function handleTouchEnd() {
-                if (touchStartElement.closest('.options')) {
-                    // If the touch started on an option, don't scroll
-                    return;
-                }
-            
-                if (touchStartY - touchEndY > 50 && currentIndex < $slides.length - 1) {
-                    // Swipe up (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (touchEndY - touchStartY > 50 && currentIndex > 0) {
-                    // Swipe down (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (touchStartY - touchEndY > 50 && currentIndex === $slides.length - 1) {
-                    // Do nothing on swipe up when already at the last slide
-                    console.log("Swiping is disabled. Use the button to proceed.");
-                } else if (touchEndY - touchStartY > 50 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
-                }
-            }
-            
-            $window.on('wheel', handleScroll);
+            // Apply touch events for touch devices
             window.addEventListener('touchstart', handleTouchStart, false);
             window.addEventListener('touchmove', handleTouchMove, false);
             window.addEventListener('touchend', handleTouchEnd, false);
-            
-            // Initial display
+    
             showSlide(currentIndex);
-            
+    
             document.querySelectorAll('.options li').forEach(option => {
                 option.addEventListener('click', () => {
                     const questionContainer = option.closest('.question-container');
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
-            
+    
                     allOptions.forEach(opt => {
-                        opt.style.pointerEvents = 'none'; // Disable further clicks
+                        opt.style.pointerEvents = 'none';
                     });
-            
+    
                     if (option.getAttribute('data-correct') === 'true') {
                         option.classList.add('correct');
                         triggerConfetti();
@@ -488,11 +498,11 @@
                         option.classList.add('incorrect');
                         option.classList.add('shake');
                     }
-            
+    
                     feedback.style.display = 'block';
                 });
             });
-            
+    
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
                 let container = document.body;
@@ -504,7 +514,7 @@
                 canvas.style.pointerEvents = "none";
                 canvas.style.zIndex = "10000";
                 container.appendChild(canvas);
-            
+    
                 let confettiButton = confetti.create(canvas);
                 confettiButton({
                     particleCount: 100,
@@ -514,6 +524,7 @@
             }
         });
     </script>
+
 
 </body>
 </html>
