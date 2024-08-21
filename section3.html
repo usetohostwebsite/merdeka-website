@@ -381,7 +381,6 @@
     
         // Set a threshold for the scroll delta
         const scrollThreshold = 8;
-        var lastScrollTime = 0; // To track the last scroll time
     
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
@@ -390,13 +389,19 @@
                 currentIndex += 1;
                 showSlide(currentIndex);
     
-                // Temporarily disable scroll handling to prevent interference
+                // Temporarily disable scroll and touch handling to prevent interference
                 disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
+                window.removeEventListener('touchstart', handleTouchStart);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
     
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
+                    window.addEventListener('touchstart', handleTouchStart, false);
+                    window.addEventListener('touchmove', handleTouchMove, false);
+                    window.addEventListener('touchend', handleTouchEnd, false);
                 }, 1000); // Re-enable after 1 second or adjust as needed
             } else {
                 window.parent.postMessage('nextSection', '*');
@@ -425,36 +430,37 @@
             }
     
             function handleScroll(event) {
-                if (scrolling || isThrottled || disableSlideChange || optionSelected) return;
+                // Check if the event is from a touchpad
+                if (event.originalEvent.deltaMode === 0 && !scrolling && !isThrottled && !disableSlideChange && !optionSelected) {
+                    isThrottled = true;
+                    scrollTimeout = setTimeout(() => {
+                        isThrottled = false;
+                    }, 200);
     
-                // Throttle the scroll event
-                var now = new Date().getTime();
-                if (now - lastScrollTime < 1000) return; // 1 second delay between scrolls
-                lastScrollTime = now;
+                    const deltaY = event.originalEvent.deltaY;
     
-                const deltaY = event.originalEvent.deltaY;
+                    if (Math.abs(deltaY) < scrollThreshold) return;
     
-                if (Math.abs(deltaY) < scrollThreshold) return;
+                    scrolling = true;
     
-                scrolling = true;
+                    if (deltaY > 0 && currentIndex < $slides.length - 1) {
+                        // Scroll down (next section)
+                        currentIndex += 1;
+                        showSlide(currentIndex);
+                    } else if (deltaY < 0 && currentIndex > 0) {
+                        // Scroll up (previous section)
+                        currentIndex -= 1;
+                        showSlide(currentIndex);
+                    } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
+                        console.log("Scrolling is disabled. Use the button to proceed.");
+                    } else if (deltaY < 0 && currentIndex === 0) {
+                        window.parent.postMessage('prevSection', '*'); // Go back to section2
+                    }
     
-                if (deltaY > 0 && currentIndex < $slides.length - 1) {
-                    // Scroll down (next section)
-                    currentIndex += 1;
-                    showSlide(currentIndex);
-                } else if (deltaY < 0 && currentIndex > 0) {
-                    // Scroll up (previous section)
-                    currentIndex -= 1;
-                    showSlide(currentIndex);
-                } else if (deltaY > 0 && currentIndex === $slides.length - 1) {
-                    console.log("Scrolling is disabled. Use the button to proceed.");
-                } else if (deltaY < 0 && currentIndex === 0) {
-                    window.parent.postMessage('prevSection', '*'); // Go back to section2
+                    setTimeout(function() {
+                        scrolling = false;
+                    }, 1000);  // Debounce time to allow smoother scrolling
                 }
-    
-                setTimeout(function() {
-                    scrolling = false;
-                }, 1000);  // Debounce time to allow smoother scrolling
             }
     
             function handleTouchStart(event) {
@@ -485,12 +491,7 @@
                 }
             }
     
-            // Only attach the scroll event listener if the device is not a touch device
-            if (!('ontouchstart' in window)) {
-                $window.on('wheel', handleScroll);
-            }
-    
-            // Always attach touch events for touch devices
+            $window.on('wheel', handleScroll);
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchend', handleTouchEnd, { passive: false });
