@@ -379,9 +379,6 @@
         var touchEndY = 0;
         var isTouchDevice = 'ontouchstart' in document.documentElement; // Detect touch device
     
-        // Set a threshold for the swipe delta
-        const swipeThreshold = 50; // Minimum distance in pixels for a swipe to be considered valid
-    
         function moveToNextSection() {
             if (isThrottled || disableSlideChange || optionSelected) return;
     
@@ -392,12 +389,16 @@
                 // Temporarily disable scroll and touch handling to prevent interference
                 disableSlideChange = true;
                 $(window).off('wheel', handleScroll);
-                removeTouchListeners();
+                window.removeEventListener('touchstart', handleTouchStart);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
     
                 setTimeout(() => {
                     disableSlideChange = false;
                     $(window).on('wheel', handleScroll);
-                    addTouchListeners();
+                    window.addEventListener('touchstart', handleTouchStart, false);
+                    window.addEventListener('touchmove', handleTouchMove, false);
+                    window.addEventListener('touchend', handleTouchEnd, false);
                 }, 1000); // Re-enable after 1 second or adjust as needed
             } else {
                 window.parent.postMessage('nextSection', '*');
@@ -421,7 +422,7 @@
         }
     
         function handleScroll(event) {
-            if (isThrottled || disableSlideChange || optionSelected || isTouchDevice) return;
+            if (isThrottled || disableSlideChange || optionSelected) return;
     
             const deltaY = event.originalEvent.deltaY;
     
@@ -449,7 +450,7 @@
         }
     
         function handleTouchEnd(event) {
-            if (Math.abs(touchStartY - touchEndY) >= swipeThreshold) {
+            if (Math.abs(touchStartY - touchEndY) >= 50) {
                 if (touchStartY > touchEndY && currentIndex < $slides.length - 1) {
                     // Swipe up (next section)
                     currentIndex += 1;
@@ -462,23 +463,12 @@
             }
         }
     
-        function addTouchListeners() {
-            window.addEventListener('touchstart', handleTouchStart, false);
-            window.addEventListener('touchmove', handleTouchMove, false);
-            window.addEventListener('touchend', handleTouchEnd, false);
-        }
-    
-        function removeTouchListeners() {
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-        }
-    
         $(document).ready(function () {
             $slides = $('.slide');
     
             if (isTouchDevice) {
                 addTouchListeners();
+                preventUnintendedTapScrolling(); // Only prevent tap-to-scroll, not taps on quiz options
             } else {
                 $(window).on('wheel', handleScroll);
             }
@@ -518,14 +508,16 @@
                         optionSelected = false; // Reset optionSelected after a delay
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
-    
-                if (isTouchDevice) {
-                    // Prevent slide change from accidental scroll on touch devices
-                    option.addEventListener('touchstart', function (event) {
-                        event.stopPropagation();
-                    });
-                }
             });
+    
+            function preventUnintendedTapScrolling() {
+                // Prevent taps from triggering scroll on the body
+                document.body.addEventListener('touchstart', function(event) {
+                    if (!event.target.closest('.options li')) {
+                        event.preventDefault(); // Prevent the default action if the target is not a quiz option
+                    }
+                }, { passive: false });
+            }
     
             function triggerConfetti() {
                 let canvas = document.createElement("canvas");
@@ -545,6 +537,12 @@
                     spread: 70,
                     origin: { y: 0.6 }
                 }).then(() => container.removeChild(canvas));
+            }
+    
+            function addTouchListeners() {
+                window.addEventListener('touchstart', handleTouchStart, { passive: false });
+                window.addEventListener('touchmove', handleTouchMove, { passive: false });
+                window.addEventListener('touchend', handleTouchEnd, { passive: false });
             }
         });
     </script>
