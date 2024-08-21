@@ -506,9 +506,10 @@
                     const allOptions = questionContainer.querySelectorAll('.options li');
                     const feedback = questionContainer.querySelector('.feedback');
     
-                    // Disable slide change temporarily after selecting an option
+                    // Prevent touch events and scroll during option selection
                     disableSlideChange = true;
                     optionSelected = true; // Set optionSelected to true
+                    document.body.style.overflow = 'hidden'; // Disable scrolling
     
                     event.preventDefault(); // Prevent touch scroll behavior
                     event.stopPropagation(); // Stop the event from bubbling up
@@ -531,6 +532,7 @@
                     setTimeout(() => {
                         disableSlideChange = false;
                         optionSelected = false; // Reset optionSelected after a delay
+                        document.body.style.overflow = ''; // Re-enable scrolling
                     }, 1000); // Increase timing to ensure no scroll happens immediately
                 });
             });
@@ -556,6 +558,7 @@
             }
         });
     </script>
+
     
 </body>
 </html>
