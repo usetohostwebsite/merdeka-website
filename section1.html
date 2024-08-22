@@ -25,6 +25,9 @@
             align-items: center;
             height: 100vh;
             text-align: center;
+            background: url('image/Steph Banner 5.png') no-repeat center center / cover;
+            height: 100%;
+            width: 100%;
         }
 
         canvas {
@@ -51,14 +54,14 @@
         /* Scroll Down Prompt */
         .scroll-down {
             position: absolute;
-            bottom: 200px;
-            left: 45%;
+            bottom: 10vh; /* 10% from the bottom of the viewport */
+            left: 50vw; /* Center horizontally */
             transform: translateX(-50%);
             font-size: 24px;
             color: #ffffff;
             cursor: pointer;
             animation: bounce 2s infinite;
-            pointer-events: none; 
+            pointer-events: none;
         }
 
         @keyframes bounce {
@@ -72,55 +75,60 @@
 
         /* Mobile-specific styles */
         @media only screen and (max-width: 480px) {
-
             .scroll-down {
-                position: relative; /* Change to relative positioning */
+                position: relative;
                 bottom: 0;
                 left: 0;
-                transform: none; /* Remove transform for proper alignment */
-                margin-top: 80px; /* Add some space above the text */
+                transform: none;
+                margin-top: 80px;
             }
-
 
             body,
             html {
                 background-position: 3% center !important; /* Focus on the left part of the image */
-                background-size: cover; /* Ensure the image covers the screen while focusing on the left */
+                background-size: contain; /* Ensure the image is fully visible */
                 background-repeat: no-repeat;
             }
         }
 
         /* Tablet-specific styles */
         @media only screen and (max-width: 768px) {
-
             .scroll-down {
-                position: relative; /* Change to relative positioning */
+                position: relative;
                 bottom: 0;
                 left: 0;
-                transform: none; /* Remove transform for proper alignment */
-                margin-top: 110px; /* Add some space above the text */
+                transform: none;
+                margin-top: 110px;
             }
 
             body,
             html {
                 background-position: 3% center !important;
-                background-size: cover;
+                background-size: contain;
                 background-repeat: no-repeat;
             }
         }
 
         /* Larger screens */
-        @media screen and (min-width: 780px) {
-            .container {
-                display: flex;
+        @media screen and (min-width: 769px) and (max-width: 1200px) {
+            .scroll-down {
+                position: absolute;
+                bottom: 10vh; /* 10% from the bottom of the viewport */
+                left: 50vw; /* Center horizontally */
+                transform: translateX(-50%);
             }
 
-            /* Additional styles for larger screens if needed */
+            body,
+            html {
+                background-position: center center !important;
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
         }
     </style>
 </head>
 
-<body style="background: url('image/Steph Banner 5.png') no-repeat left center / cover; overflow: hidden;">
+<body>
 
     <canvas id="canvas"></canvas>
 
