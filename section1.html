@@ -25,7 +25,6 @@
             align-items: center;
             height: 100vh;
             text-align: center;
-            background: url('image/Steph Banner 5.png') no-repeat center center / cover;
         }
 
         canvas {
@@ -52,8 +51,8 @@
         /* Scroll Down Prompt */
         .scroll-down {
             position: absolute;
-            bottom: 10vh; /* 10% from the bottom of the viewport */
-            left: 50vw; /* Center horizontally */
+            bottom: 200px;
+            left: 45%;
             transform: translateX(-50%);
             font-size: 24px;
             color: #ffffff;
@@ -63,9 +62,11 @@
         }
 
         @keyframes bounce {
-            0%, 100% {
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-10px);
             }
@@ -83,8 +84,8 @@
 
             body,
             html {
-                background-position: 3% center !important; /* Focus on the left part of the image */
-                background-size: contain; /* Ensure the image is fully visible */
+                background-position: 3% center !important;
+                background-size: cover;
                 background-repeat: no-repeat;
             }
         }
@@ -102,23 +103,20 @@
             body,
             html {
                 background-position: 3% center !important;
-                background-size: contain;
+                background-size: cover;
                 background-repeat: no-repeat;
             }
         }
 
         /* Larger screens */
-        @media screen and (min-width: 769px) and (max-width: 1200px) {
-            .scroll-down {
-                position: absolute;
-                bottom: 10vh; /* 10% from the bottom of the viewport */
-                left: 50vw; /* Center horizontally */
-                transform: translateX(-50%);
+        @media screen and (min-width: 780px) {
+            .container {
+                display: flex;
             }
 
             body,
             html {
-                background-position: center center !important;
+                background-position: center center;
                 background-size: cover;
                 background-repeat: no-repeat;
             }
@@ -127,28 +125,23 @@
         /* Non-touchscreen devices */
         @media (hover: hover) and (pointer: fine) {
             .scroll-down {
-                position: absolute;
-                bottom: 10vh; /* 10% from the bottom of the viewport */
-                left: 50vw; /* Center horizontally */
+                font-size: 28px; /* Increase font size */
+                bottom: 150px; /* Adjust bottom position */
+                left: 50%; /* Center horizontally */
                 transform: translateX(-50%);
             }
 
             body,
             html {
-                background-position: center center !important;
+                background-position: center center;
                 background-size: cover;
                 background-repeat: no-repeat;
-            }
-
-            .scroll-down {
-                font-size: 28px;
-                bottom: 5vh; /* Move the text slightly higher for better visibility */
             }
         }
     </style>
 </head>
 
-<body>
+<body style="background: url('image/Steph Banner 5.png') no-repeat left center / cover; overflow: hidden;">
 
     <canvas id="canvas"></canvas>
 
@@ -233,8 +226,8 @@
                 x: x,
                 y: SCREEN_HEIGHT
             }]);
-            this.explosionColor = Math.floor(Math.random() * 360); // Assign a random color
-            this.color = this.explosionColor; // Set the rocket color
+            this.explosionColor = Math.floor(Math.random() * 360);
+            this.color = this.explosionColor;
         }
 
         Rocket.prototype = new Particle();
@@ -253,7 +246,7 @@
                 particle.resistance = 0.92;
                 particle.shrink = Math.random() * 0.05 + 0.93;
                 particle.flick = true;
-                particle.color = this.explosionColor; // Use the rocket's explosion color
+                particle.color = this.explosionColor;
                 particles.push(particle);
             }
         };
@@ -323,8 +316,8 @@
         var launchFrom = function (x) {
             if (rockets.length < 10) {
                 var rocket = new Rocket(x);
-                rocket.explosionColor = Math.floor(Math.random() * 360); // Random color
-                rocket.color = rocket.explosionColor; // Set rocket color
+                rocket.explosionColor = Math.floor(Math.random() * 360);
+                rocket.color = rocket.explosionColor;
                 rocket.vel.y = Math.random() * -3 - 4;
                 rocket.vel.x = Math.random() * 6 - 3;
                 rocket.size = 8;
@@ -346,12 +339,12 @@
         function stopFireworks() {
             clearInterval(launchInterval);
             clearInterval(loopInterval);
-            rockets = []; // Clear rockets
-            particles = []; // Clear particles
-            context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            rockets = [];
+            particles = [];
+            context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        startFireworks(); // Start fireworks on load
+        startFireworks();
 
         let currentSlide = 0;
         const maxSlides = 1;
@@ -362,14 +355,14 @@
                 fadeOut();
                 setTimeout(() => {
                     window.parent.postMessage('nextSection', '*');
-                    stopFireworks(); // Stop fireworks when moving to the next section
+                    stopFireworks();
                 }, 1000);
             } else if (event.data === 'prevSlide' && currentSlide > 0) {
                 currentSlide -= 1;
                 fadeOut();
                 setTimeout(() => {
                     window.parent.postMessage('prevSection', '*');
-                    stopFireworks(); // Stop fireworks when moving to the previous section
+                    stopFireworks();
                 }, 1000);
             }
         }
@@ -389,13 +382,12 @@
             fadeOut();
             setTimeout(() => {
                 window.parent.postMessage('nextSection', '*');
-                stopFireworks(); // Stop fireworks when scrolling down
+                stopFireworks();
             }, 1000);
         }
 
         window.addEventListener('message', handleMessage);
 
-        // Handle mouse scroll for section change
         window.addEventListener('wheel', (event) => {
             if (event.deltaY > 0) {
                 goNextSection();
@@ -403,12 +395,11 @@
                 fadeOut();
                 setTimeout(() => {
                     window.parent.postMessage('prevSection', '*');
-                    stopFireworks(); // Stop fireworks when scrolling up
+                    stopFireworks();
                 }, 1000);
             }
         });
 
-        // Handle touch events for scrolling on mobile devices
         window.addEventListener('touchstart', handleTouchStart, false);
         window.addEventListener('touchmove', handleTouchMove, false);
 
@@ -434,9 +425,9 @@
 
             if (Math.abs(xDiff) > Math.abs(yDiff)) {
                 if (xDiff > 0) {
-                    /* left swipe */
+                    // left swipe
                 } else {
-                    /* right swipe */
+                    // right swipe
                 }
             } else {
                 if (yDiff > 0) {
@@ -455,7 +446,6 @@
                     }, 1000);
                 }
             }
-            /* reset values */
             xDown = null;
             yDown = null;
         };
