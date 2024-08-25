@@ -505,8 +505,8 @@
     
         function moveToPreviousSection() {
             if (isIOS) {
-                // Handle iOS-specific navigation
-                window.location.href = 'section3.html'; // Redirect to section3.html
+                // Handle iOS-specific navigation without reloading the page
+                navigateToSection(-1); // Move to the previous section with transition
             } else {
                 window.parent.postMessage('prevSection', parentOrigin);
             }
@@ -514,13 +514,29 @@
     
         function moveToNextSection() {
             if (isIOS) {
-                // Handle iOS-specific navigation
-                window.location.href = 'section5.html'; // Redirect to section5.html
+                // Handle iOS-specific navigation without reloading the page
+                navigateToSection(1); // Move to the next section with transition
             } else {
                 window.parent.postMessage('nextSection', parentOrigin);
             }
         }
+    
+        function navigateToSection(direction) {
+            const sections = document.querySelectorAll('.img-wrapper');
+            let currentSectionIndex = Array.from(sections).findIndex(section => section.classList.contains('visible'));
+    
+            const newSectionIndex = currentSectionIndex + direction;
+            
+            if (newSectionIndex >= 0 && newSectionIndex < sections.length) {
+                sections[currentSectionIndex].classList.remove('visible');
+                sections[currentSectionIndex].classList.add(direction > 0 ? 'hidden-top' : 'hidden-bottom');
+    
+                sections[newSectionIndex].classList.remove(direction > 0 ? 'hidden-bottom' : 'hidden-top');
+                sections[newSectionIndex].classList.add('visible');
+            }
+        }
     </script>
+
 
 </body>
 </html>
