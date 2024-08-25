@@ -159,7 +159,7 @@
         /* Buttons */
         .navigation-button {
             position: absolute;
-            top: 30px; 
+            top: 25px; /* Move the buttons to the top */
             padding: 10px 20px;
             font-size: 1rem;
             background-color: #5D4037;
@@ -184,7 +184,7 @@
         
         .scroll-text {
             position: absolute;
-            top: 30px; 
+            top: 25px; /* Move the text to the top */
             left: 50%;
             transform: translateX(-50%);
             font-size: 1rem;
@@ -461,12 +461,6 @@
     </div>
 
     <script>
-        // Define the parent origin for postMessage
-        const parentOrigin = window.location.origin; // Automatically use the current page's origin
-    
-        // Define isIOS variable to check if the user is on an iOS device
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
             let startX = 0;
@@ -496,55 +490,20 @@
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
                 if (scrollLeft - currentScrollTop > 100 && currentScrollTop >= maxScrollTop - 50) {
-                    moveToNextSection();
+                    window.parent.postMessage('nextSection', '*');
                 } else if (currentScrollTop - scrollLeft > 100 && currentScrollTop <= 50) {
-                    moveToPreviousSection();
+                    window.parent.postMessage('prevSection', '*');
                 }
             });
         });
     
         function moveToPreviousSection() {
-            if (isIOS) {
-                // Handle iOS-specific transition and navigation
-                transitionAndNavigate(-1, 'section3.html');
-            } else {
-                navigateToSection(-1);
-            }
+            window.parent.postMessage('prevSection', '*');
         }
     
         function moveToNextSection() {
-            if (isIOS) {
-                // Handle iOS-specific transition and navigation
-                transitionAndNavigate(1, 'section5.html');
-            } else {
-                navigateToSection(1);
-            }
-        }
-    
-        function navigateToSection(direction) {
-            const sections = document.querySelectorAll('.img-wrapper');
-            let currentSectionIndex = Array.from(sections).findIndex(section => section.classList.contains('visible'));
-    
-            const newSectionIndex = currentSectionIndex + direction;
-            
-            if (newSectionIndex >= 0 && newSectionIndex < sections.length) {
-                sections[currentSectionIndex].classList.remove('visible');
-                sections[currentSectionIndex].classList.add(direction > 0 ? 'hidden-top' : 'hidden-bottom');
-    
-                sections[newSectionIndex].classList.remove(direction > 0 ? 'hidden-bottom' : 'hidden-top');
-                sections[newSectionIndex].classList.add('visible');
-            }
-        }
-    
-        function transitionAndNavigate(direction, targetUrl) {
-            navigateToSection(direction);
-    
-            // Delay the navigation to allow the transition to complete
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 1000); // Adjust the timeout to match the transition duration
+            window.parent.postMessage('nextSection', '*');
         }
     </script>
-
 </body>
 </html>
