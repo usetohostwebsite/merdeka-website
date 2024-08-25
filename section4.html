@@ -539,7 +539,7 @@
         function transitionAndNavigate(direction, targetUrl) {
             navigateToSection(direction);
     
-            // After the transition, navigate to the target URL
+            // Delay the navigation to allow the transition to complete
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 1000); // Adjust the timeout to match the transition duration
