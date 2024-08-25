@@ -461,6 +461,12 @@
     </div>
 
     <script>
+        // Define the parent origin for postMessage
+        const parentOrigin = window.location.origin; // Automatically use the current page's origin
+    
+        // Define isIOS variable to check if the user is on an iOS device
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
             let startX = 0;
@@ -490,20 +496,31 @@
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
                 if (scrollLeft - currentScrollTop > 100 && currentScrollTop >= maxScrollTop - 50) {
-                    window.parent.postMessage('nextSection', '*');
+                    moveToNextSection();
                 } else if (currentScrollTop - scrollLeft > 100 && currentScrollTop <= 50) {
-                    window.parent.postMessage('prevSection', '*');
+                    moveToPreviousSection();
                 }
             });
         });
     
         function moveToPreviousSection() {
-            window.parent.postMessage('prevSection', '*');
+            if (isIOS) {
+                // Handle iOS-specific navigation
+                window.location.href = 'section3.html'; // Redirect to section3.html
+            } else {
+                window.parent.postMessage('prevSection', parentOrigin);
+            }
         }
     
         function moveToNextSection() {
-            window.parent.postMessage('nextSection', '*');
+            if (isIOS) {
+                // Handle iOS-specific navigation
+                window.location.href = 'section5.html'; // Redirect to section5.html
+            } else {
+                window.parent.postMessage('nextSection', parentOrigin);
+            }
         }
     </script>
+
 </body>
 </html>
