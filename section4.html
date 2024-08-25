@@ -159,7 +159,7 @@
         /* Buttons */
         .navigation-button {
             position: absolute;
-            bottom: 30px;
+            top: 45px; /* Move the buttons to the top */
             padding: 10px 20px;
             font-size: 1rem;
             background-color: #5D4037;
@@ -175,16 +175,16 @@
         }
 
         .back-button {
-            left: 20px;
+            left: 20px; /* Keep the left button aligned to the left */
         }
 
         .next-button {
-            right: 20px;
+            right: 20px; /* Keep the right button aligned to the right */
         }
         
         .scroll-text {
             position: absolute;
-            bottom: 30px;
+            top: 45px; /* Move the text to the top */
             left: 50%;
             transform: translateX(-50%);
             font-size: 1rem;
@@ -197,7 +197,7 @@
             .navigation-button {
                 font-size: 0.9rem;
                 padding: 8px 16px;
-                bottom: 60px;
+                top: 40px; /* Adjust top spacing for tablets */
             }
             
             p.scroll-info {
@@ -210,7 +210,7 @@
             
             .scroll-text {
                 font-size: 0.9rem;
-                bottom: 60px;
+                top: 40px; /* Adjust top spacing for tablets */
             }
         }
 
@@ -218,22 +218,22 @@
             .navigation-button {
                 font-size: 0.8rem;
                 padding: 6px 12px;
-                bottom: 60px;
+                top: 60px; /* Adjust top spacing for mobile devices */
             }
             
             p.scroll-info {
-                font-size: 11px; /* Adjust this to the size you want on tablets */
+                font-size: 11px; /* Adjust this to the size you want on mobile devices */
             }
 
             .caption {
-                font-size: 0.6rem; /* Adjust this to the size you want on tablets */
+                font-size: 0.6rem; /* Adjust this to the size you want on mobile devices */
                 padding: 0.05rem 0 !important;
                 margin: 0.1rem 0.1rem !important;
             }
             
             .scroll-text {
                 font-size: 0.8rem;
-                bottom: 60px;
+                top: 60px; /* Adjust top spacing for mobile devices */
             }
         }
     </style>
@@ -287,7 +287,7 @@
             <div class="img-wrapper faster1">
                 <div>
                     <img src="image/02.jpg" alt="11">
-                    <div class="caption">A portrait of the tree sapling planted<br>by YTM Tunku Abdul Rahman Putra <br>Al-Haj to commemorate the construction<br>of TAR College's first campus</div>
+                    <div class="caption">A portrait of the tree sapling <br>planted by YTM Tunku Abdul<br>Rahman Putra Al-Haj to <br>commemorate the construction<br>of TAR College's first campus</div>
                 </div>
             </div>
             
@@ -453,7 +453,6 @@
             </div>
         </div>
         
-
         <div class="scroll-text">Scroll up or down</div>
         
         <!-- Navigation buttons -->
@@ -506,8 +505,5 @@
             window.parent.postMessage('nextSection', '*');
         }
     </script>
-    
-    
-    
 </body>
 </html>
