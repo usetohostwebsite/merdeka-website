@@ -505,21 +505,19 @@
     
         function moveToPreviousSection() {
             if (isIOS) {
-                // On iOS, navigate directly to section3.html
-                window.location.href = 'section3.html';
+                // Handle iOS-specific transition and navigation
+                transitionAndNavigate(-1, 'section3.html');
             } else {
-                // For other platforms, handle the transition within the same page
-                navigateToSection(-1); // Move to the previous section with transition
+                navigateToSection(-1);
             }
         }
     
         function moveToNextSection() {
             if (isIOS) {
-                // On iOS, navigate directly to section5.html
-                window.location.href = 'section5.html';
+                // Handle iOS-specific transition and navigation
+                transitionAndNavigate(1, 'section5.html');
             } else {
-                // For other platforms, handle the transition within the same page
-                navigateToSection(1); // Move to the next section with transition
+                navigateToSection(1);
             }
         }
     
@@ -536,6 +534,15 @@
                 sections[newSectionIndex].classList.remove(direction > 0 ? 'hidden-bottom' : 'hidden-top');
                 sections[newSectionIndex].classList.add('visible');
             }
+        }
+    
+        function transitionAndNavigate(direction, targetUrl) {
+            navigateToSection(direction);
+    
+            // After the transition, navigate to the target URL
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 1000); // Adjust the timeout to match the transition duration
         }
     </script>
 
