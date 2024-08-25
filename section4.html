@@ -466,6 +466,9 @@
             let startX = 0;
             let scrollLeft = 0;
     
+            // Detect if the user is on an iOS device
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
             // Handle mouse wheel scroll (for desktop)
             horizontalScrollWrapper.addEventListener('wheel', function(event) {
                 event.preventDefault();
@@ -490,20 +493,37 @@
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
     
                 if (scrollLeft - currentScrollTop > 100 && currentScrollTop >= maxScrollTop - 50) {
-                    window.parent.postMessage('nextSection', '*');
+                    moveToNextSection();
                 } else if (currentScrollTop - scrollLeft > 100 && currentScrollTop <= 50) {
-                    window.parent.postMessage('prevSection', '*');
+                    moveToPreviousSection();
                 }
             });
+    
+            // Move to the previous section
+            function moveToPreviousSection() {
+                if (isIOS) {
+                    // For iOS, use a delayed navigation to allow the transition effect
+                    setTimeout(function() {
+                        window.location.href = 'section3.html';
+                    }, 300); // Adjust the delay to match the transition duration
+                } else {
+                    window.parent.postMessage('prevSection', '*');
+                }
+            }
+    
+            // Move to the next section
+            function moveToNextSection() {
+                if (isIOS) {
+                    // For iOS, use a delayed navigation to allow the transition effect
+                    setTimeout(function() {
+                        window.location.href = 'section5.html';
+                    }, 300); // Adjust the delay to match the transition duration
+                } else {
+                    window.parent.postMessage('nextSection', '*');
+                }
+            }
         });
-    
-        function moveToPreviousSection() {
-            window.parent.postMessage('prevSection', '*');
-        }
-    
-        function moveToNextSection() {
-            window.parent.postMessage('nextSection', '*');
-        }
     </script>
+
 </body>
 </html>
