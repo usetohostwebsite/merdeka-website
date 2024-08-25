@@ -461,68 +461,90 @@
     </div>
 
     <script>
+        // 2. Function to detect if the device is iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const horizontalScrollWrapper = document.querySelector('.horizontal-scroll-wrapper');
-            let startX = 0;
-            let scrollLeft = 0;
-    
-            // Detect if the user is on an iOS device
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
+            let startY = 0; // Changed to startY since scrolling is vertical
+            let scrollTopStart = 0;
+
             // Handle mouse wheel scroll (for desktop)
             horizontalScrollWrapper.addEventListener('wheel', function(event) {
                 event.preventDefault();
                 horizontalScrollWrapper.scrollTop += event.deltaY; // Keep this for rotated scrolling
             });
-    
+
             // Touch events for mobile devices
             horizontalScrollWrapper.addEventListener('touchstart', function(e) {
-                startX = e.touches[0].clientY; // Adjusted for vertical direction
-                scrollLeft = horizontalScrollWrapper.scrollTop; // Adjusted for vertical scroll
+                startY = e.touches[0].clientY; // Adjusted for vertical direction
+                scrollTopStart = horizontalScrollWrapper.scrollTop; // Adjusted for vertical scroll
             });
-    
+
             horizontalScrollWrapper.addEventListener('touchmove', function(e) {
                 e.preventDefault(); // Prevent vertical scroll on non-rotated elements
-                const y = e.touches[0].clientY;
-                const walk = (y - startX) * 1.5; // Adjust sensitivity as needed
-                horizontalScrollWrapper.scrollTop = scrollLeft - walk; // Adjusted for vertical scroll
+                const currentY = e.touches[0].clientY;
+                const walk = (currentY - startY) * 1.5; // Adjust sensitivity as needed
+                horizontalScrollWrapper.scrollTop = scrollTopStart - walk; // Adjusted for vertical scroll
             });
-    
+
             horizontalScrollWrapper.addEventListener('touchend', function() {
                 const maxScrollTop = horizontalScrollWrapper.scrollHeight - horizontalScrollWrapper.clientHeight;
                 const currentScrollTop = horizontalScrollWrapper.scrollTop;
-    
-                if (scrollLeft - currentScrollTop > 100 && currentScrollTop >= maxScrollTop - 50) {
-                    moveToNextSection();
-                } else if (currentScrollTop - scrollLeft > 100 && currentScrollTop <= 50) {
-                    moveToPreviousSection();
+                const delta = scrollTopStart - currentScrollTop;
+
+                if (delta > 100 && currentScrollTop >= maxScrollTop - 50) {
+                    // User scrolled down
+                    handleNextSection();
+                } else if (delta < -100 && currentScrollTop <= 50) {
+                    // User scrolled up
+                    handlePreviousSection();
                 }
             });
-    
-            // Move to the previous section
-            function moveToPreviousSection() {
-                if (isIOS) {
-                    // For iOS, use a delayed navigation to allow the transition effect
-                    setTimeout(function() {
-                        window.location.href = 'section3.html';
-                    }, 300); // Adjust the delay to match the transition duration
-                } else {
-                    window.parent.postMessage('prevSection', '*');
-                }
-            }
-    
-            // Move to the next section
-            function moveToNextSection() {
-                if (isIOS) {
-                    // For iOS, use a delayed navigation to allow the transition effect
-                    setTimeout(function() {
-                        window.location.href = 'section5.html';
-                    }, 300); // Adjust the delay to match the transition duration
-                } else {
-                    window.parent.postMessage('nextSection', '*');
-                }
-            }
         });
+
+        // 3. Functions to handle section navigation based on device
+        function handlePreviousSection() {
+            if (isIOS()) {
+                // On iOS, perform transition and navigate to section3.html
+                triggerTransitionAndNavigate('section3.html');
+            } else {
+                // On other devices, send 'prevSection' message
+                window.parent.postMessage('prevSection', '*');
+            }
+        }
+
+        function handleNextSection() {
+            if (isIOS()) {
+                // On iOS, perform transition and navigate to section5.html
+                triggerTransitionAndNavigate('section5.html');
+            } else {
+                // On other devices, send 'nextSection' message
+                window.parent.postMessage('nextSection', '*');
+            }
+        }
+
+        // Function to trigger transition effect and navigate
+        function triggerTransitionAndNavigate(targetUrl) {
+            // Add the fade-out class to trigger the CSS transition
+            document.body.classList.add('fade-out');
+
+            // After the transition duration, navigate to the target URL
+            setTimeout(function() {
+                window.location.href = targetUrl;
+            }, 1000); // Duration should match the CSS transition (1s in this case)
+        }
+
+        // 4. Update button click handlers to use the new functions
+        function moveToPreviousSection() {
+            handlePreviousSection();
+        }
+
+        function moveToNextSection() {
+            handleNextSection();
+        }
     </script>
 
 </body>
