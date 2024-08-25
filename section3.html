@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Quiz with Parallax Effect</title>
     <style>
         body, html {
@@ -10,7 +13,7 @@
             padding: 0;
             height: 100%;
             overflow-x: hidden;
-            font-family: Hepta Slab, sans-serif;
+            font-family: Montserrat, sans-serif;
             font-weight: 500;
             background: url('image/background11.png') no-repeat center center fixed; /* Set the background image */
             background-size: cover; /* Make sure the background image covers the entire page */
@@ -198,6 +201,84 @@
             background-color: #3e2a26;
         }
 
+        /* Styles for the last slide */
+        #slide6 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1s, transform 1s;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        #slide6.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #slide6 .parallax {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        #slide6 .content {
+            width: 80%; /* Make the text wrapper wider */
+            font-size: 2em; /* Increase font size */
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1;
+            box-sizing: border-box;
+            color: #5D4037; /* Match the overall theme */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #slide6 .scroll-info.glow {
+            font-family: 'Montserrat', sans-serif;
+            color: #060606;
+            text-shadow: 
+                2px 2px 4px #d2d2d2, 
+                2px 2px 4px #d2d2d2;
+        }
+
+        /* Button specific to slide 6 */
+        #slide6 .next-section-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #5D4037;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: auto;
+            white-space: nowrap;
+            display: inline-block;
+            box-sizing: content-box;
+        }
+
+        #slide6 .next-section-button:hover {
+            background-color: #3e2a26;
+        }
+
+
         /* Media queries for responsiveness */
         @media (max-width: 1200px) {
             .content {
@@ -360,11 +441,23 @@
                         </ul>
                         <div class="feedback">Jawapan: 16 September 1963. Penubuhan Malaysia melibatkan penggabungan Malaya, Singapura, Sabah dan Sarawak. Singapura telah keluar daripada Malaysia pada tahun 1965.</div>
                     </div>
-                    <!-- New button to move to the next section -->
-                    <button class="next-section-button" onclick="moveToNextSection()">Proceed to Gallery</button>
                 </div>
             </div>
         </div>
+
+        <div class="slide" id="slide6">
+            <div class="parallax" style="background-image: url('image/background2.0.png');"></div>
+            <div class="content">
+                <div class="scroll-info glow">
+                    Malaysia's independence emphasised the need for quality education to drive national development. In response, TAR College, named after YTM Tunku Abdul Rahman, was founded to offer education for all Malaysians.
+                    <br><br>
+                    The gallery below showcases the early days of TAR College, now TAR UMT.
+                </div>
+                <!-- Button moved here under the text -->
+                <button class="next-section-button" onclick="moveToNextSection()">Proceed to Gallery</button>
+            </div>
+        </div>
+
     </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
