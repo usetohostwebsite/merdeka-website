@@ -505,19 +505,21 @@
     
         function moveToPreviousSection() {
             if (isIOS) {
-                // Handle iOS-specific navigation without reloading the page
-                navigateToSection(-1); // Move to the previous section with transition
+                // On iOS, navigate directly to section3.html
+                window.location.href = 'section3.html';
             } else {
-                window.parent.postMessage('prevSection', parentOrigin);
+                // For other platforms, handle the transition within the same page
+                navigateToSection(-1); // Move to the previous section with transition
             }
         }
     
         function moveToNextSection() {
             if (isIOS) {
-                // Handle iOS-specific navigation without reloading the page
-                navigateToSection(1); // Move to the next section with transition
+                // On iOS, navigate directly to section5.html
+                window.location.href = 'section5.html';
             } else {
-                window.parent.postMessage('nextSection', parentOrigin);
+                // For other platforms, handle the transition within the same page
+                navigateToSection(1); // Move to the next section with transition
             }
         }
     
@@ -536,7 +538,6 @@
             }
         }
     </script>
-
 
 </body>
 </html>
