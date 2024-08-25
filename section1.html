@@ -163,20 +163,13 @@
         var MAX_PARTICLES = 200;
         var loopInterval, launchInterval;
 
-        function resizeCanvas() {
-            if (window.innerWidth <= 480) {
-                canvas.width = SCREEN_WIDTH = window.innerWidth / 2;
-                canvas.height = SCREEN_HEIGHT = window.innerHeight / 2;
-            } else {
-                canvas.width = SCREEN_WIDTH = window.innerWidth;
-                canvas.height = SCREEN_HEIGHT = window.innerHeight;
-            }
-        }
+        canvas.width = SCREEN_WIDTH;
+        canvas.height = SCREEN_HEIGHT;
 
-        window.onresize = resizeCanvas;
-
-        // Initial canvas size adjustment on page load
-        resizeCanvas();
+        window.onresize = function () {
+            canvas.width = SCREEN_WIDTH = window.innerWidth;
+            canvas.height = SCREEN_HEIGHT = window.innerHeight;
+        };
 
         function Particle(pos) {
             this.pos = {
@@ -281,10 +274,10 @@
 
         var loop = function () {
             if (SCREEN_WIDTH != window.innerWidth) {
-                resizeCanvas();
+                canvas.width = SCREEN_WIDTH = window.innerWidth;
             }
             if (SCREEN_HEIGHT != window.innerHeight) {
-                resizeCanvas();
+                canvas.height = SCREEN_HEIGHT = window.innerHeight;
             }
 
             context.globalCompositeOperation = 'destination-out';
